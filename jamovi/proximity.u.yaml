@@ -2,7 +2,8 @@ title: Distances
 name: proximity
 jus: '3.0'
 stage: 0
-compilerMode: aggressive
+compilerMode: tame
+
 children:
   - type: VariableSupplier
     persistentItems: false
@@ -21,55 +22,79 @@ children:
             name: label
             maxItemCount: 1
             isTarget: true
+
   - type: LayoutBox
     margin: large
+    style: inline
     children:
       - type: ComboBox
         name: disSim
-  - type: LayoutBox
-    margin: large
-    children:
       - type: ComboBox
         name: btwDir
+
   - type: LayoutBox
     margin: large
     children:
       - type: ComboBox
         name: lvlMsr
+
   - type: LayoutBox
     margin: large
+    style: list
     children:
-      - type: ComboBox
-        name: intDis
-  - type: LayoutBox
-    margin: large
-    children:
+      - type: LayoutBox
+        margin: large
+        style: inline
+        children:
+          - type: ComboBox
+            name: intDis
+          - type: TextBox
+            name: intPwr
+            format: number
+          - type: TextBox
+            name: intRot
+            format: number
       - type: ComboBox
         name: intSim
+
   - type: LayoutBox
     margin: large
+    style: inline
     children:
-      - type: TextBox
-        name: intPwr
-        format: number
+      - type: ComboBox
+        name: cntDis
+
   - type: LayoutBox
     margin: large
+    style: inline
     children:
+      - type: ComboBox
+        name: binDis
+      - type: ComboBox
+        name: binSim
       - type: TextBox
-        name: intRot
+        name: binPrs
         format: number
-  - type: LayoutBox
+      - type: TextBox
+        name: binAbs
+        format: number
+
+  - type: CollapseBox
     margin: large
+    collapsed: true
+    label: Transform Data (before the calculation of the proximity meansure)
+    style: inline
     children:
       - type: ComboBox
         name: xfmMth
-  - type: LayoutBox
-    margin: large
-    children:
       - type: ComboBox
         name: xfmDir
-  - type: LayoutBox
+
+  - type: CollapseBox
     margin: large
+    collapsed: true
+    label: Transform Results (after the calculation of the proximity meansure)
+    style: inline
     children:
       - type: CheckBox
         name: xfmAbs

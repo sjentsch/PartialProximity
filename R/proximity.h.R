@@ -15,6 +15,11 @@ proximityOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
             intSim = "intCrr",
             intPwr = 2,
             intRot = 2,
+            cntDis = "cntChi",
+            binDis = "binEuc",
+            binSim = "binRnR",
+            binPrs = 1,
+            binAbs = 0,
             xfmMth = "xfmNon",
             xfmDir = "xfmVar",
             xfmAbs = FALSE,
@@ -85,6 +90,58 @@ proximityOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
                 default=2,
                 min=1,
                 max=4)
+            private$..cntDis <- jmvcore::OptionList$new(
+                "cntDis",
+                cntDis,
+                options=list(
+                    "cntChi",
+                    "cntPhi"),
+                default="cntChi")
+            private$..binDis <- jmvcore::OptionList$new(
+                "binDis",
+                binDis,
+                options=list(
+                    "binEuc",
+                    "binSqE",
+                    "binSzD",
+                    "binPtD",
+                    "binVar",
+                    "binShp",
+                    "binLnW"),
+                default="binEuc")
+            private$..binSim <- jmvcore::OptionList$new(
+                "binSim",
+                binSim,
+                options=list(
+                    "binRnR",
+                    "binSmM",
+                    "binJcc",
+                    "binDic",
+                    "binRnT",
+                    "binSk1",
+                    "binSk2",
+                    "binSk3",
+                    "binKc1",
+                    "binKc2",
+                    "binSk4",
+                    "binHmn",
+                    "binLmb",
+                    "binAnD",
+                    "binYlY",
+                    "binYlQ",
+                    "binOch",
+                    "binSk5",
+                    "binPh4",
+                    "binDsp"),
+                default="binRnR")
+            private$..binPrs <- jmvcore::OptionNumber$new(
+                "binPrs",
+                binPrs,
+                default=1)
+            private$..binAbs <- jmvcore::OptionNumber$new(
+                "binAbs",
+                binAbs,
+                default=0)
             private$..xfmMth <- jmvcore::OptionList$new(
                 "xfmMth",
                 xfmMth,
@@ -126,6 +183,11 @@ proximityOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
             self$.addOption(private$..intSim)
             self$.addOption(private$..intPwr)
             self$.addOption(private$..intRot)
+            self$.addOption(private$..cntDis)
+            self$.addOption(private$..binDis)
+            self$.addOption(private$..binSim)
+            self$.addOption(private$..binPrs)
+            self$.addOption(private$..binAbs)
             self$.addOption(private$..xfmMth)
             self$.addOption(private$..xfmDir)
             self$.addOption(private$..xfmAbs)
@@ -142,6 +204,11 @@ proximityOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
         intSim = function() private$..intSim$value,
         intPwr = function() private$..intPwr$value,
         intRot = function() private$..intRot$value,
+        cntDis = function() private$..cntDis$value,
+        binDis = function() private$..binDis$value,
+        binSim = function() private$..binSim$value,
+        binPrs = function() private$..binPrs$value,
+        binAbs = function() private$..binAbs$value,
         xfmMth = function() private$..xfmMth$value,
         xfmDir = function() private$..xfmDir$value,
         xfmAbs = function() private$..xfmAbs$value,
@@ -157,6 +224,11 @@ proximityOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
         ..intSim = NA,
         ..intPwr = NA,
         ..intRot = NA,
+        ..cntDis = NA,
+        ..binDis = NA,
+        ..binSim = NA,
+        ..binPrs = NA,
+        ..binAbs = NA,
         ..xfmMth = NA,
         ..xfmDir = NA,
         ..xfmAbs = NA,
@@ -212,6 +284,11 @@ proximityBase <- if (requireNamespace('jmvcore')) R6::R6Class(
 #' @param intSim .
 #' @param intPwr .
 #' @param intRot .
+#' @param cntDis .
+#' @param binDis .
+#' @param binSim .
+#' @param binPrs .
+#' @param binAbs .
 #' @param xfmMth .
 #' @param xfmDir .
 #' @param xfmAbs .
@@ -234,6 +311,11 @@ proximity <- function(
     intSim = "intCrr",
     intPwr = 2,
     intRot = 2,
+    cntDis = "cntChi",
+    binDis = "binEuc",
+    binSim = "binRnR",
+    binPrs = 1,
+    binAbs = 0,
     xfmMth = "xfmNon",
     xfmDir = "xfmVar",
     xfmAbs = FALSE,
@@ -262,6 +344,11 @@ proximity <- function(
         intSim = intSim,
         intPwr = intPwr,
         intRot = intRot,
+        cntDis = cntDis,
+        binDis = binDis,
+        binSim = binSim,
+        binPrs = binPrs,
+        binAbs = binAbs,
         xfmMth = xfmMth,
         xfmDir = xfmDir,
         xfmAbs = xfmAbs,
