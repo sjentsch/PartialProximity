@@ -239,7 +239,7 @@ proximityOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
 proximityResults <- if (requireNamespace('jmvcore')) R6::R6Class(
     inherit = jmvcore::Group,
     active = list(
-        text = function() private$.items[["text"]]),
+        matrix = function() private$.items[["matrix"]]),
     private = list(),
     public=list(
         initialize=function(options) {
@@ -247,10 +247,26 @@ proximityResults <- if (requireNamespace('jmvcore')) R6::R6Class(
                 options=options,
                 name="",
                 title="Distances")
-            self$add(jmvcore::Preformatted$new(
+            self$add(jmvcore::Table$new(
                 options=options,
-                name="text",
-                title="Distances"))}))
+                name="matrix",
+                title="Matrix with Proximity Measures",
+                rows=0,
+                clearWith=list(
+                    "shwSig",
+                    "sidSig"),
+                columns=list(
+                    list(
+                        `name`=".name[r]", 
+                        `title`="", 
+                        `type`="text", 
+                        `content`="($key)", 
+                        `combineBelow`=TRUE),
+                    list(
+                        `name`=".stat[r]", 
+                        `title`="", 
+                        `type`="number", 
+                        `content`="Proximity measure"))))}))
 
 proximityBase <- if (requireNamespace('jmvcore')) R6::R6Class(
     "proximityBase",
@@ -296,8 +312,14 @@ proximityBase <- if (requireNamespace('jmvcore')) R6::R6Class(
 #' @param xfmRsc .
 #' @return A results object containing:
 #' \tabular{llllll}{
-#'   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
+#'   \code{results$matrix} \tab \tab \tab \tab \tab Matrix table with proximity measures \cr
 #' }
+#'
+#' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
+#'
+#' \code{results$matrix$asDF}
+#'
+#' \code{as.data.frame(results$matrix)}
 #'
 #' @export
 proximity <- function(
