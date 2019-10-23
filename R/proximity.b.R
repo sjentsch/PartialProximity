@@ -11,7 +11,9 @@ proximityClass <- if (requireNamespace('jmvcore')) R6::R6Class(
             pxmVar = self$options$get('vars')
             pxmLbl = self$options$get('label')
             if (length(pxmVar) > 1) {
+saveRDS(self$data, file='/home/sjentsch/Downloads/Trial1.rds')
                 dtaMtx = self$data[, pxmVar]
+saveRDS(dtaMtx, file='/home/sjentsch/Downloads/Trial2.rds')                
 print(str(dtaMtx))
                 sbjLbl = self$data[, pxmLbl]
                 blnVld = !apply(is.na(dtaMtx), 1, any)
