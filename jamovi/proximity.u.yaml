@@ -71,17 +71,21 @@ children:
 
   - type: LayoutBox
     margin: large
-    style: inline
+    style: list
     children:
-      - type: ComboBox
-        name: binDis
-        enable: (clcDis)
-      - type: ComboBox
-        name: binSim
-        enable: (clcSim)
-      - type: TextBox
-        name: binPrs
-        format: number
+      - type: LayoutBox
+        margin: large
+        style: inline
+        children:
+          - type: ComboBox
+            name: binDis
+            enable: (clcDis)
+          - type: ComboBox
+            name: binSim
+            enable: (clcSim)
+          - type: TextBox
+            name: binPrs
+            format: number
       - type: TextBox
         name: binAbs
         format: number
