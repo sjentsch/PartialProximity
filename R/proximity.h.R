@@ -6,8 +6,8 @@ proximityOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
     inherit = jmvcore::Options,
     public = list(
         initialize = function(
-            pxmVar = NULL,
-            pxmLbl = NULL,
+            vars = NULL,
+            label = NULL,
             disSim = "clcDis",
             btwDir = "btwSbj",
             lvlMsr = "lvlInt",
@@ -32,12 +32,12 @@ proximityOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
                 requiresData=TRUE,
                 ...)
 
-            private$..pxmVar <- jmvcore::OptionVariables$new(
-                "pxmVar",
-                pxmVar)
-            private$..pxmLbl <- jmvcore::OptionVariable$new(
-                "pxmLbl",
-                pxmLbl)
+            private$..vars <- jmvcore::OptionVariables$new(
+                "vars",
+                vars)
+            private$..label <- jmvcore::OptionVariable$new(
+                "label",
+                label)
             private$..disSim <- jmvcore::OptionList$new(
                 "disSim",
                 disSim,
@@ -174,8 +174,8 @@ proximityOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
                 xfmRsc,
                 default=FALSE)
 
-            self$.addOption(private$..pxmVar)
-            self$.addOption(private$..pxmLbl)
+            self$.addOption(private$..vars)
+            self$.addOption(private$..label)
             self$.addOption(private$..disSim)
             self$.addOption(private$..btwDir)
             self$.addOption(private$..lvlMsr)
@@ -195,8 +195,8 @@ proximityOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
             self$.addOption(private$..xfmRsc)
         }),
     active = list(
-        pxmVar = function() private$..pxmVar$value,
-        pxmLbl = function() private$..pxmLbl$value,
+        vars = function() private$..vars$value,
+        label = function() private$..label$value,
         disSim = function() private$..disSim$value,
         btwDir = function() private$..btwDir$value,
         lvlMsr = function() private$..lvlMsr$value,
@@ -215,8 +215,8 @@ proximityOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
         xfmInv = function() private$..xfmInv$value,
         xfmRsc = function() private$..xfmRsc$value),
     private = list(
-        ..pxmVar = NA,
-        ..pxmLbl = NA,
+        ..vars = NA,
+        ..label = NA,
         ..disSim = NA,
         ..btwDir = NA,
         ..lvlMsr = NA,
@@ -275,8 +275,8 @@ proximityBase <- if (requireNamespace('jmvcore')) R6::R6Class(
 #'
 #' 
 #' @param data .
-#' @param pxmVar .
-#' @param pxmLbl .
+#' @param vars .
+#' @param label .
 #' @param disSim .
 #' @param btwDir .
 #' @param lvlMsr .
@@ -302,8 +302,8 @@ proximityBase <- if (requireNamespace('jmvcore')) R6::R6Class(
 #' @export
 proximity <- function(
     data,
-    pxmVar,
-    pxmLbl,
+    vars,
+    label,
     disSim = "clcDis",
     btwDir = "btwSbj",
     lvlMsr = "lvlInt",
@@ -325,18 +325,18 @@ proximity <- function(
     if ( ! requireNamespace('jmvcore'))
         stop('proximity requires jmvcore to be installed (restart may be required)')
 
-    if ( ! missing(pxmVar)) pxmVar <- jmvcore::resolveQuo(jmvcore::enquo(pxmVar))
-    if ( ! missing(pxmLbl)) pxmLbl <- jmvcore::resolveQuo(jmvcore::enquo(pxmLbl))
+    if ( ! missing(vars)) vars <- jmvcore::resolveQuo(jmvcore::enquo(vars))
+    if ( ! missing(label)) label <- jmvcore::resolveQuo(jmvcore::enquo(label))
     if (missing(data))
         data <- jmvcore::marshalData(
             parent.frame(),
-            `if`( ! missing(pxmVar), pxmVar, NULL),
-            `if`( ! missing(pxmLbl), pxmLbl, NULL))
+            `if`( ! missing(vars), vars, NULL),
+            `if`( ! missing(label), label, NULL))
 
 
     options <- proximityOptions$new(
-        pxmVar = pxmVar,
-        pxmLbl = pxmLbl,
+        vars = vars,
+        label = label,
         disSim = disSim,
         btwDir = btwDir,
         lvlMsr = lvlMsr,

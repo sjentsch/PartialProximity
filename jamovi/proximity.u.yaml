@@ -12,13 +12,13 @@ children:
         label: Variables
         children:
           - type: VariablesListBox
-            name: pxmVar
+            name: vars
             isTarget: true
       - type: TargetLayoutBox
         label: Label cases by
         children:
           - type: VariablesListBox
-            name: pxmLbl
+            name: label
             maxItemCount: 1
             isTarget: true
   - type: LayoutBox
