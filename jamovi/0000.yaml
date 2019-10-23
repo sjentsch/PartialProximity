@@ -11,6 +11,16 @@ type: R
 description: >-
   More about what it does (maybe more than one line) Use four spaces when
   indenting paragraphs within the Description.
-analyses: []
+analyses:
+  - title: Partial Correlation
+    name: partcorr
+    ns: PartialProximity
+    menuGroup: PartialProximity
+    menuTitle: Partial Correlation
+  - title: Distances
+    name: proximity
+    ns: PartialProximity
+    menuGroup: PartialProximity
+    menuTitle: Distances
 
 ...

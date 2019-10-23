@@ -1,0 +1,11 @@
+---
+name:  partcorr
+title: Partial Correlation
+jrs:   '1.1'
+
+items:
+    - name:  text
+      title: Partial Correlation
+      type:  Preformatted
+
+...
