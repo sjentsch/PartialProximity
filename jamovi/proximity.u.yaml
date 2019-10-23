@@ -21,3 +21,18 @@ children:
             name: label
             maxItemCount: 1
             isTarget: true
+  - type: LayoutBox
+    margin: large
+    children:
+      - type: ComboBox
+        name: disSim
+  - type: LayoutBox
+    margin: large
+    children:
+      - type: ComboBox
+        name: btwDir
+  - type: LayoutBox
+    margin: large
+    children:
+      - type: ComboBox
+        name: lvlMsr

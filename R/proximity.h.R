@@ -7,7 +7,10 @@ proximityOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
     public = list(
         initialize = function(
             vars = NULL,
-            label = NULL, ...) {
+            label = NULL,
+            disSim = "clcDis",
+            btwDir = "btwSbj",
+            lvlMsr = "lvlInt", ...) {
 
             super$initialize(
                 package='PartialProximity',
@@ -21,16 +24,47 @@ proximityOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
             private$..label <- jmvcore::OptionVariable$new(
                 "label",
                 label)
+            private$..disSim <- jmvcore::OptionList$new(
+                "disSim",
+                disSim,
+                options=list(
+                    "clcDis",
+                    "clcSim"),
+                default="clcDis")
+            private$..btwDir <- jmvcore::OptionList$new(
+                "btwDir",
+                btwDir,
+                options=list(
+                    "btwSbj",
+                    "btwVar"),
+                default="btwSbj")
+            private$..lvlMsr <- jmvcore::OptionList$new(
+                "lvlMsr",
+                lvlMsr,
+                options=list(
+                    "lvlInt",
+                    "lvlBin",
+                    "lvlCnt"),
+                default="lvlInt")
 
             self$.addOption(private$..vars)
             self$.addOption(private$..label)
+            self$.addOption(private$..disSim)
+            self$.addOption(private$..btwDir)
+            self$.addOption(private$..lvlMsr)
         }),
     active = list(
         vars = function() private$..vars$value,
-        label = function() private$..label$value),
+        label = function() private$..label$value,
+        disSim = function() private$..disSim$value,
+        btwDir = function() private$..btwDir$value,
+        lvlMsr = function() private$..lvlMsr$value),
     private = list(
         ..vars = NA,
-        ..label = NA)
+        ..label = NA,
+        ..disSim = NA,
+        ..btwDir = NA,
+        ..lvlMsr = NA)
 )
 
 proximityResults <- if (requireNamespace('jmvcore')) R6::R6Class(
@@ -74,6 +108,9 @@ proximityBase <- if (requireNamespace('jmvcore')) R6::R6Class(
 #' @param data .
 #' @param vars .
 #' @param label .
+#' @param disSim .
+#' @param btwDir .
+#' @param lvlMsr .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
@@ -83,7 +120,10 @@ proximityBase <- if (requireNamespace('jmvcore')) R6::R6Class(
 proximity <- function(
     data,
     vars,
-    label) {
+    label,
+    disSim = "clcDis",
+    btwDir = "btwSbj",
+    lvlMsr = "lvlInt") {
 
     if ( ! requireNamespace('jmvcore'))
         stop('proximity requires jmvcore to be installed (restart may be required)')
@@ -99,7 +139,10 @@ proximity <- function(
 
     options <- proximityOptions$new(
         vars = vars,
-        label = label)
+        label = label,
+        disSim = disSim,
+        btwDir = btwDir,
+        lvlMsr = lvlMsr)
 
     analysis <- proximityClass$new(
         options = options,

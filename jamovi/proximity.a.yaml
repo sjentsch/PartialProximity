@@ -49,51 +49,51 @@ options:
           name:  lvlCnt
       default: lvlInt
 
-    # # layout box around Interval, Counts and Binary
-    # # radio buttons for variable level (left)
-    # # measurement choices right
-    # - name: intDis
-    #   title: Measure
-    #   type: List
-    #   options:
-    #     - title: Euclidian distance
-    #       name:  intEuc
-    #     - title: Squared Euclidian distance
-    #       name:  intSqE
-    #     - title: Chebychev
-    #       name:  intChb
-    #     - title: Block
-    #       name:  intBlk
-    #     - title: Minkowski
-    #       name:  intMnk
-    #     - title: Customized
-    #       name:  intCst
-    #   default: intEuc
-    #
-    # - name: intSim
-    #   title: Measure
-    #   type: List
-    #   options:
-    #     - title: Pearson correlation
-    #       name:  intCrr
-    #     - title: Cosine
-    #       name:  intCos
-    #   default: intCrr
-    #
-    # - name: intPwr
-    #   title: Power
-    #   type: Integer
-    #   default: 2
-    #   min: 1
-    #   max: 4
-    #
-    # - name: intRot
-    #   title: Root
-    #   type: Integer
-    #   default: 2
-    #   min: 1
-    #   max: 4
-    #
+    # layout box around Interval, Counts and Binary
+    # radio buttons for variable level (left)
+    # measurement choices right
+    - name: intDis
+      title: Measure
+      type: List
+      options:
+        - title: Euclidian distance
+          name:  intEuc
+        - title: Squared Euclidian distance
+          name:  intSqE
+        - title: Chebychev
+          name:  intChb
+        - title: Block
+          name:  intBlk
+        - title: Minkowski
+          name:  intMnk
+        - title: Customized
+          name:  intCst
+      default: intEuc
+
+    - name: intSim
+      title: Measure
+      type: List
+      options:
+        - title: Pearson correlation
+          name:  intCrr
+        - title: Cosine
+          name:  intCos
+      default: intCrr
+
+    - name: intPwr
+      title: Power
+      type: Integer
+      default: 2
+      min: 1
+      max: 4
+
+    - name: intRot
+      title: Root
+      type: Integer
+      default: 2
+      min: 1
+      max: 4
+
     # - name: cntDis
     #   title: Measure
     #   type: List
