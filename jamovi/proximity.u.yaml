@@ -80,15 +80,15 @@ children:
           - type: ComboBox
             name: binDis
             enable: (clcDis)
-          - type: ComboBox
-            name: binSim
-            enable: (clcSim)
           - type: TextBox
             name: binPrs
             format: number
-      - type: TextBox
-        name: binAbs
-        format: number
+          - type: TextBox
+            name: binAbs
+            format: number
+      - type: ComboBox
+        name: binSim
+        enable: (clcSim)
 
   - type: CollapseBox
     margin: large
