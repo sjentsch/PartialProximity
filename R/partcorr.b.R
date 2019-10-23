@@ -39,7 +39,7 @@ partcorrClass <- if (requireNamespace('jmvcore')) R6::R6Class(
             }
             # initialize the results table (assign the notes underneath)
             matrix$setNote('ctlNte', ifelse(length(varCtl) > 0, paste0('Controlling for ', paste(varCtl, collapse=", ")), 'Not controlling for any variables, i.e. the table shows correlations'))
-            matrix$setNote('sigNte', paste0(ifelse(self$options$get('flgSig'), '* p < .05, ** p < .01, *** p < .001, ', ''), ifelse(self$options$get('sidSig') == 'onetailed', 'one-tailed', 'two-tailed')))
+            matrix$setNote('sigNte', paste0(ifelse(self$options$get('sidSig') == 'onetailed', 'One-tailed significance', 'Two-tailed significance'), ifelse(self$options$get('flgSig'), ', * p < .05, ** p < .01, *** p < .001, ', '')))
         },
         # ====================================================
         .run = function() {
