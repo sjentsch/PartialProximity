@@ -6,10 +6,11 @@ partcorrOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
     inherit = jmvcore::Options,
     public = list(
         initialize = function(
-            dep = NULL,
-            group = NULL,
-            alt = "notequal",
-            varEq = TRUE, ...) {
+            corrvars = NULL,
+            ctrlvars = NULL,
+            shwSig = TRUE,
+            flgSig = FALSE,
+            sidSig = "twotailed", ...) {
 
             super$initialize(
                 package='PartialProximity',
@@ -17,46 +18,60 @@ partcorrOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
                 requiresData=TRUE,
                 ...)
 
-            private$..dep <- jmvcore::OptionVariable$new(
-                "dep",
-                dep)
-            private$..group <- jmvcore::OptionVariable$new(
-                "group",
-                group)
-            private$..alt <- jmvcore::OptionList$new(
-                "alt",
-                alt,
-                options=list(
-                    "notequal",
-                    "onegreater",
-                    "twogreater"),
-                default="notequal")
-            private$..varEq <- jmvcore::OptionBool$new(
-                "varEq",
-                varEq,
+            private$..corrvars <- jmvcore::OptionVariables$new(
+                "corrvars",
+                corrvars,
+                suggested=list(
+                    "continuous"),
+                permitted=list(
+                    "numeric"))
+            private$..ctrlvars <- jmvcore::OptionVariables$new(
+                "ctrlvars",
+                ctrlvars,
+                suggested=list(
+                    "continuous"),
+                permitted=list(
+                    "numeric"))
+            private$..shwSig <- jmvcore::OptionBool$new(
+                "shwSig",
+                shwSig,
                 default=TRUE)
+            private$..flgSig <- jmvcore::OptionBool$new(
+                "flgSig",
+                flgSig,
+                default=FALSE)
+            private$..sidSig <- jmvcore::OptionList$new(
+                "sidSig",
+                sidSig,
+                options=list(
+                    "onetailed",
+                    "twotailed"),
+                default="twotailed")
 
-            self$.addOption(private$..dep)
-            self$.addOption(private$..group)
-            self$.addOption(private$..alt)
-            self$.addOption(private$..varEq)
+            self$.addOption(private$..corrvars)
+            self$.addOption(private$..ctrlvars)
+            self$.addOption(private$..shwSig)
+            self$.addOption(private$..flgSig)
+            self$.addOption(private$..sidSig)
         }),
     active = list(
-        dep = function() private$..dep$value,
-        group = function() private$..group$value,
-        alt = function() private$..alt$value,
-        varEq = function() private$..varEq$value),
+        corrvars = function() private$..corrvars$value,
+        ctrlvars = function() private$..ctrlvars$value,
+        shwSig = function() private$..shwSig$value,
+        flgSig = function() private$..flgSig$value,
+        sidSig = function() private$..sidSig$value),
     private = list(
-        ..dep = NA,
-        ..group = NA,
-        ..alt = NA,
-        ..varEq = NA)
+        ..corrvars = NA,
+        ..ctrlvars = NA,
+        ..shwSig = NA,
+        ..flgSig = NA,
+        ..sidSig = NA)
 )
 
 partcorrResults <- if (requireNamespace('jmvcore')) R6::R6Class(
     inherit = jmvcore::Group,
     active = list(
-        text = function() private$.items[["text"]]),
+        matrix = function() private$.items[["matrix"]]),
     private = list(),
     public=list(
         initialize=function(options) {
@@ -64,10 +79,39 @@ partcorrResults <- if (requireNamespace('jmvcore')) R6::R6Class(
                 options=options,
                 name="",
                 title="Partial Correlation")
-            self$add(jmvcore::Preformatted$new(
+            self$add(jmvcore::Table$new(
                 options=options,
-                name="text",
-                title="Partial Correlation"))}))
+                name="matrix",
+                title="Partial Correlation Matrix",
+                rows="(corrvars)",
+                clearWith=list(
+                    "shwSig",
+                    "sidSig"),
+                columns=list(
+                    list(
+                        `name`=".name[r]", 
+                        `title`="", 
+                        `type`="text", 
+                        `content`="($key)", 
+                        `combineBelow`=TRUE),
+                    list(
+                        `name`=".stat[r]", 
+                        `title`="", 
+                        `type`="text", 
+                        `content`="Pearson's r"),
+                    list(
+                        `name`=".name[rp]", 
+                        `title`="", 
+                        `type`="text", 
+                        `content`="($key)", 
+                        `combineBelow`=TRUE, 
+                        `visible`="(shwSig)"),
+                    list(
+                        `name`=".stat[rp]", 
+                        `title`="", 
+                        `type`="text", 
+                        `content`="p-value", 
+                        `visible`="(shwSig)"))))}))
 
 partcorrBase <- if (requireNamespace('jmvcore')) R6::R6Class(
     "partcorrBase",
@@ -92,40 +136,49 @@ partcorrBase <- if (requireNamespace('jmvcore')) R6::R6Class(
 #'
 #' 
 #' @param data .
-#' @param dep .
-#' @param group .
-#' @param alt .
-#' @param varEq .
+#' @param corrvars .
+#' @param ctrlvars .
+#' @param shwSig .
+#' @param flgSig .
+#' @param sidSig .
 #' @return A results object containing:
 #' \tabular{llllll}{
-#'   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
+#'   \code{results$matrix} \tab \tab \tab \tab \tab Partial correlation matrix table \cr
 #' }
+#'
+#' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
+#'
+#' \code{results$matrix$asDF}
+#'
+#' \code{as.data.frame(results$matrix)}
 #'
 #' @export
 partcorr <- function(
     data,
-    dep,
-    group,
-    alt = "notequal",
-    varEq = TRUE) {
+    corrvars,
+    ctrlvars,
+    shwSig = TRUE,
+    flgSig = FALSE,
+    sidSig = "twotailed") {
 
     if ( ! requireNamespace('jmvcore'))
         stop('partcorr requires jmvcore to be installed (restart may be required)')
 
-    if ( ! missing(dep)) dep <- jmvcore::resolveQuo(jmvcore::enquo(dep))
-    if ( ! missing(group)) group <- jmvcore::resolveQuo(jmvcore::enquo(group))
+    if ( ! missing(corrvars)) corrvars <- jmvcore::resolveQuo(jmvcore::enquo(corrvars))
+    if ( ! missing(ctrlvars)) ctrlvars <- jmvcore::resolveQuo(jmvcore::enquo(ctrlvars))
     if (missing(data))
         data <- jmvcore::marshalData(
             parent.frame(),
-            `if`( ! missing(dep), dep, NULL),
-            `if`( ! missing(group), group, NULL))
+            `if`( ! missing(corrvars), corrvars, NULL),
+            `if`( ! missing(ctrlvars), ctrlvars, NULL))
 
 
     options <- partcorrOptions$new(
-        dep = dep,
-        group = group,
-        alt = alt,
-        varEq = varEq)
+        corrvars = corrvars,
+        ctrlvars = ctrlvars,
+        shwSig = shwSig,
+        flgSig = flgSig,
+        sidSig = sidSig)
 
     analysis <- partcorrClass$new(
         options = options,
