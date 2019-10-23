@@ -11,6 +11,7 @@ proximityClass <- if (requireNamespace('jmvcore')) R6::R6Class(
             pxmVar = self$options$get('vars')
             pxmLbl = self$options$get('label')
             if (length(pxmVar) > 1) {
+print('init')
 dtaRaw = self$data
 saveRDS(dtaRaw, file='/home/sjentsch/Downloads/Trial1.rds')
                 dtaMtx = self$data[, pxmVar]
@@ -45,6 +46,7 @@ print(as.matrix(dtaMtx) == as.numeric(self$options$get('binPrs')))
             # get variables
             pxmVar = self$options$get('vars')
             if (length(pxmVar) > 1) {
+print('run')
                 dtaMtx = self$data[, pxmVar]
                 blnVld = !apply(is.na(dtaMtx), 1, any)
                 dtaMtx = dtaMtx[blnVld, ]
