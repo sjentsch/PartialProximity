@@ -4,8 +4,25 @@ title: Distances
 jrs:   '1.1'
 
 items:
-    - name:  text
-      title: Distances
-      type:  Preformatted
+    - name: matrix
+      title: Matrix with Proximity Measures
+      type: Table
+      description: Matrix table with proximity measures
+      rows: 0
+      clearWith:
+          - shwSig
+          - sidSig
+
+      columns:
+          - name: .name[r]
+            title: ""
+            type: text
+            content: ($key)
+            combineBelow: true
+
+          - name: .stat[r]
+            title: ""
+            type: number
+            content: Proximity measure
 
 ...

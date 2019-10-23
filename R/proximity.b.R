@@ -12,10 +12,6 @@ proximityClass <- if (requireNamespace('jmvcore')) R6::R6Class(
             pxmLbl = self$options$get('label')
             if (length(pxmVar) > 1) {
 print('init')
-dtaRw1 = self$options$.getData()
-dtaRw2 = self$data
-print(str(dtaRw1))
-print(str(dtaRw2))
 print(self$options)
 print(self$results)
                 dtaMtx = self$data[, pxmVar]
