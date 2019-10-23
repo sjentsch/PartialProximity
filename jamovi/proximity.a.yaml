@@ -180,7 +180,6 @@ options:
       type: Number
       default: 0
 
-    # the next two go in a layout box (Transform Values)
     # transformation on the data matrix before calculating the proximity measure
     - name: xfmMth
       title: Standardize values
@@ -212,7 +211,6 @@ options:
           name:  xfmSbj
       default: xfmVar
 
-    # needs a layout box (Transform Measures) around it
     # applied to the result matrix
     - name: xfmAbs
       title: Absolute values
