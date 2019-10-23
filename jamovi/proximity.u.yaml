@@ -36,3 +36,25 @@ children:
     children:
       - type: ComboBox
         name: lvlMsr
+  - type: LayoutBox
+    margin: large
+    children:
+      - type: ComboBox
+        name: intDis
+  - type: LayoutBox
+    margin: large
+    children:
+      - type: ComboBox
+        name: intSim
+  - type: LayoutBox
+    margin: large
+    children:
+      - type: TextBox
+        name: intPwr
+        format: number
+  - type: LayoutBox
+    margin: large
+    children:
+      - type: TextBox
+        name: intRot
+        format: number
