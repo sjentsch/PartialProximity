@@ -1,7 +1,7 @@
 ---
 name:  partcorr
 title: Partial Correlation
-menuGroup: PartialProximity
+menuGroup: Regression
 version: '1.0.0'
 jas: '1.2'
 
@@ -9,28 +9,44 @@ options:
     - name: data
       type: Data
 
-    - name: dep
-      title: Dependent Variable
-      type: Variable
+    - name: corrvars
+      title: Variables
+      type: Variables
+      suggested: [ continuous ]
+      permitted: [ numeric ]
 
-    - name: group
-      title: Grouping Variable
-      type: Variable
+    - name: ctrlvars
+      title: Controlling for
+      type: Variables
+      suggested: [ continuous ]
+      permitted: [ numeric ]
 
-    - name: alt
-      title: Alternative hypothesis
-      type: List
-      options:
-        - title: Not equal
-          name:  notequal
-        - title: One greater
-          name:  onegreater
-        - title: Two greater
-          name:  twogreater
-      default: notequal
-
-    - name: varEq
-      title: Assume equal variances
+    - name: shwSig
+      title: Show significance levels
       type: Bool
       default: true
+
+    - name: flgSig
+      title: Flag significant correlations
+      type: Bool
+      default: false
+
+    - name: sidSig
+      title: Test of Significance
+      type: List
+      options:
+        - title: One-tailed
+          name:  onetailed
+        - title: Two-tailed
+          name:  twotailed
+      default: twotailed
+
+#   - name: zerOrd
+#     title: zero-order correlations
+#     type: Bool
+#     default: false
+
+# casewise / listwise exclusion
+
 ...
+
