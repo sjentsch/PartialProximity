@@ -12,8 +12,10 @@ proximityClass <- if (requireNamespace('jmvcore')) R6::R6Class(
             pxmLbl = self$options$get('label')
             if (length(pxmVar) > 1) {
                 dtaMtx = self$data[, pxmVar]
+print(str(dtaMtx))
                 sbjLbl = self$data[, pxmLbl]
                 blnVld = !apply(is.na(dtaMtx), 1, any)
+print(blnVld)
                 dtaMtx = dtaMtx[blnVld, ]
                 sbjLbl = sbjLbl[blnVld, ]
                 numIvN = length(blnVld[!blnVld])
