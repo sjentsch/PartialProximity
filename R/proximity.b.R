@@ -19,9 +19,9 @@ proximityClass <- if (requireNamespace('jmvcore')) R6::R6Class(
                 numIvN = length(blnVld[!blnVld])
                 # for binary data, ensure that these only contain the two categories defined by lvlMsr == lvlBin
                 if (self$options$get('lvlMsr') == 'lvlBin') {
-print(str(as.number(self$options$get('binPrs'))))
-print(str(as.number(self$options$get('binAbs'))))
-                    blnBnC = apply(dtaMtx == as.number(self$options$get('binPrs')) | dtaMtx == as.number(self$options$get('binAbs')), 1, all)
+print(typeof(self$options$get('binPrs')))
+print(typeof(self$options$get('binAbs')))
+                    blnBnC = apply(dtaMtx == as.numeric(self$options$get('binPrs')) | dtaMtx == as.numeric(self$options$get('binAbs')), 1, all)
                     dtaMtx = dtaMtx[blnBnC, ]
                     sbjLbl = sbjLbl[blnBnC, ]
                     numIvB = length(blnBnC[!blnBnC])
@@ -44,7 +44,7 @@ print(str(as.number(self$options$get('binAbs'))))
                 dtaMtx = dtaMtx[blnVld, ]
                 # for binary data, ensure that these only contain the two categories defined by lvlMsr == lvlBin
                 if (self$options$get('lvlMsr') == 'lvlBin') {
-                    blnBnC = apply(dtaMtx == self$options$get('binPrs') | dtaMtx == self$options$get('binAbs'), 1, all)
+                    blnBnC = apply(dtaMtx == as.numeric(self$options$get('binPrs')) | dtaMtx == as.numeric(self$options$get('binAbs')), 1, all)
                     dtaMtx = dtaMtx[blnBnC, ]
 # replace with present and absent
                 }
@@ -312,30 +312,28 @@ algCnt <- function(dtaMtx, mthNme) {
 
 
 xfmDta <- function(dtaMtx, xfmMth, xfmDir) {
-    # z-scores - Z - correct
     xfmDim = ifelse(xfmDir == 'xfmVar', 2, ifelse(xfmDir == 'xfmSbj', 1, NA))
 
-    if      (xfmMth == 'xfmZsc' && xfmDir == 'xfmVar')
-        dtaMtx = as.data.frame(scale(dtaMtx, center=T, scale=T))
-    else if (xfmMth == 'xfmZsc' && xfmDir == 'xfmSbj')
-        dtaMtx = as.data.frame(t(scale(t(dtaMtx), center=T, scale=T)))
+    # z-scores - Z - correct
+    if      (xfmMth == 'xfmZsc')
+        xfmMtx = sweep(sweep(dtaMtx, xfmDim, as.vector(apply(dtaMtx, xfmDim, mean)),  "-"), xfmDim, as.vector(apply(dtaMtx, xfmDim, sd)),          "/")
     # range -1 to 1 - RANGE - over subjects correct, over variables possibly wrong in SPSS
     else if (xfmMth == 'xfmRNP')
-        dtaMtx = sweep(dtaMtx, xfmDim, as.vector(diff(apply(dtaMtx, xfmDim, range))), "/")
+        xfmMtx = sweep(dtaMtx, xfmDim, as.vector(diff(apply(dtaMtx, xfmDim, range))), "/")
     # range 0 to 1 - RESCALE - over subjects correct, over variables possibly wrong in SPSS
     else if (xfmMth == 'xfmRZP')
-        dtaMtx = sweep(sweep(dtaMtx, xfmDim, as.vector(apply(dtaMtx, xfmDim, min)), "-"), xfmDim, as.vector(diff(apply(dtaMtx, xfmDim, range))), "/")
+        xfmMtx = sweep(sweep(dtaMtx, xfmDim, as.vector(apply(dtaMtx, xfmDim, min)),   "-"), xfmDim, as.vector(diff(apply(dtaMtx, xfmDim, range))), "/")
     # maximum magnitude of 1 - MAX - correct
     else if (xfmMth == 'xfmMag')
-        dtaMtx = sweep(dtaMtx, xfmDim, as.vector(apply(dtaMtx, xfmDim, max)),  "/")
+        xfmMtx = sweep(dtaMtx, xfmDim, as.vector(apply(dtaMtx, xfmDim, max)),  "/")
     # mean of 1 - MEAN - correct
     else if (xfmMth == 'xfmAvr')
-        dtaMtx = sweep(dtaMtx, xfmDim, as.vector(apply(dtaMtx, xfmDim, mean)), "/")
+        xfmMtx = sweep(dtaMtx, xfmDim, as.vector(apply(dtaMtx, xfmDim, mean)), "/")
     # standard deviation of 1 - SD - correct
     else if (xfmMth == 'xfmStd')
-        dtaMtx = sweep(dtaMtx, xfmDim, as.vector(apply(dtaMtx, xfmDim, sd)),   "/")
+        xfmMtx = sweep(dtaMtx, xfmDim, as.vector(apply(dtaMtx, xfmDim, sd)),   "/")
 
-    return(dtaMtx)
+    return(xfmMtx)
 }
 
 
