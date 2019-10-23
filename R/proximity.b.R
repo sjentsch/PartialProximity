@@ -11,7 +11,6 @@ proximityClass <- if (requireNamespace('jmvcore')) R6::R6Class(
             pxmVar = self$options$get('vars')
             pxmLbl = self$options$get('label')
             if (length(pxmVar) > 1) {
-print(self$options)
                 dtaMtx = self$data[, pxmVar]
                 sbjLbl = self$data[, pxmLbl]
                 blnVld = !apply(is.na(dtaMtx), 1, any)
@@ -20,8 +19,7 @@ print(self$options)
                 numIvN = length(blnVld[!blnVld])
                 # for binary data, ensure that these only contain the two categories defined by lvlMsr == lvlBin
                 if (self$options$get('lvlMsr') == 'lvlBin') {
-print(self$options$get('binPrs'))
-print(self$options$get('binAbs'))
+print(dtaMtx == self$options$get('binPrs') | dtaMtx == self$options$get('binAbs'))
                     blnBnC = apply(dtaMtx == self$options$get('binPrs') | dtaMtx == self$options$get('binAbs'), 1, all)
                     dtaMtx = dtaMtx[blnBnC, ]
                     sbjLbl = sbjLbl[blnBnC, ]
@@ -45,7 +43,6 @@ print(self$options$get('binAbs'))
                 dtaMtx = dtaMtx[blnVld, ]
                 # for binary data, ensure that these only contain the two categories defined by lvlMsr == lvlBin
                 if (self$options$get('lvlMsr') == 'lvlBin') {
-print()
                     blnBnC = apply(dtaMtx == self$options$get('binPrs') | dtaMtx == self$options$get('binAbs'), 1, all)
                     dtaMtx = dtaMtx[blnBnC, ]
 # replace with present and absent
