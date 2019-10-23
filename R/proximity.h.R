@@ -7,24 +7,7 @@ proximityOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
     public = list(
         initialize = function(
             vars = NULL,
-            label = NULL,
-            disSim = "clcDis",
-            btwDir = "btwSbj",
-            lvlMsr = "lvlInt",
-            intDis = "intEuc",
-            intSim = "intCrr",
-            intPwr = 2,
-            intRot = 2,
-            cntDis = "intChi",
-            binDis = "binEuc",
-            binSim = "binRnR",
-            binPrs = 1,
-            binAbs = 0,
-            xfmMth = "xfmNon",
-            xfmDir = "xfmVar",
-            xfmAbs = FALSE,
-            xfmInv = FALSE,
-            xfmRsc = FALSE, ...) {
+            label = NULL, ...) {
 
             super$initialize(
                 package='PartialProximity',
@@ -38,202 +21,16 @@ proximityOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
             private$..label <- jmvcore::OptionVariable$new(
                 "label",
                 label)
-            private$..disSim <- jmvcore::OptionList$new(
-                "disSim",
-                disSim,
-                options=list(
-                    "clcDis",
-                    "clcSim"),
-                default="clcDis")
-            private$..btwDir <- jmvcore::OptionList$new(
-                "btwDir",
-                btwDir,
-                options=list(
-                    "btwSbj",
-                    "btwVar"),
-                default="btwSbj")
-            private$..lvlMsr <- jmvcore::OptionList$new(
-                "lvlMsr",
-                lvlMsr,
-                options=list(
-                    "lvlInt",
-                    "lvlBin",
-                    "lvlCnt"),
-                default="lvlInt")
-            private$..intDis <- jmvcore::OptionList$new(
-                "intDis",
-                intDis,
-                options=list(
-                    "intEuc",
-                    "intSqE",
-                    "intChb",
-                    "intBlk",
-                    "intMnk",
-                    "intCst"),
-                default="intEuc")
-            private$..intSim <- jmvcore::OptionList$new(
-                "intSim",
-                intSim,
-                options=list(
-                    "intCrr",
-                    "intCos"),
-                default="intCrr")
-            private$..intPwr <- jmvcore::OptionInteger$new(
-                "intPwr",
-                intPwr,
-                default=2,
-                min=1,
-                max=4)
-            private$..intRot <- jmvcore::OptionInteger$new(
-                "intRot",
-                intRot,
-                default=2,
-                min=1,
-                max=4)
-            private$..cntDis <- jmvcore::OptionList$new(
-                "cntDis",
-                cntDis,
-                options=list(
-                    "cntChi",
-                    "cntPhi"),
-                default="intChi")
-            private$..binDis <- jmvcore::OptionList$new(
-                "binDis",
-                binDis,
-                options=list(
-                    "binEuc",
-                    "binSqE",
-                    "binSzD",
-                    "binPtD",
-                    "binVar",
-                    "binShp",
-                    "binLnW"),
-                default="binEuc")
-            private$..binSim <- jmvcore::OptionList$new(
-                "binSim",
-                binSim,
-                options=list(
-                    "binRnR",
-                    "binSmM",
-                    "binJcc",
-                    "binDic",
-                    "binRnT",
-                    "binSk1",
-                    "binSk2",
-                    "binSk3",
-                    "binKc1",
-                    "binKc2",
-                    "binSk4",
-                    "binHmn",
-                    "binLmb",
-                    "binAnD",
-                    "binYlY",
-                    "binYlQ",
-                    "binOch",
-                    "binSk5",
-                    "binPh4",
-                    "binDsp"),
-                default="binRnR")
-            private$..binPrs <- jmvcore::OptionNumber$new(
-                "binPrs",
-                binPrs,
-                default=1)
-            private$..binAbs <- jmvcore::OptionNumber$new(
-                "binAbs",
-                binAbs,
-                default=0)
-            private$..xfmMth <- jmvcore::OptionList$new(
-                "xfmMth",
-                xfmMth,
-                options=list(
-                    "xfmNon",
-                    "xfmZsc",
-                    "xfmRNP",
-                    "xfmRZP",
-                    "xfmMag",
-                    "xfmAvr",
-                    "xfmStd"),
-                default="xfmNon")
-            private$..xfmDir <- jmvcore::OptionList$new(
-                "xfmDir",
-                xfmDir,
-                options=list(
-                    "xfmVar",
-                    "xfmSbj"),
-                default="xfmVar")
-            private$..xfmAbs <- jmvcore::OptionBool$new(
-                "xfmAbs",
-                xfmAbs,
-                default=FALSE)
-            private$..xfmInv <- jmvcore::OptionBool$new(
-                "xfmInv",
-                xfmInv,
-                default=FALSE)
-            private$..xfmRsc <- jmvcore::OptionBool$new(
-                "xfmRsc",
-                xfmRsc,
-                default=FALSE)
 
             self$.addOption(private$..vars)
             self$.addOption(private$..label)
-            self$.addOption(private$..disSim)
-            self$.addOption(private$..btwDir)
-            self$.addOption(private$..lvlMsr)
-            self$.addOption(private$..intDis)
-            self$.addOption(private$..intSim)
-            self$.addOption(private$..intPwr)
-            self$.addOption(private$..intRot)
-            self$.addOption(private$..cntDis)
-            self$.addOption(private$..binDis)
-            self$.addOption(private$..binSim)
-            self$.addOption(private$..binPrs)
-            self$.addOption(private$..binAbs)
-            self$.addOption(private$..xfmMth)
-            self$.addOption(private$..xfmDir)
-            self$.addOption(private$..xfmAbs)
-            self$.addOption(private$..xfmInv)
-            self$.addOption(private$..xfmRsc)
         }),
     active = list(
         vars = function() private$..vars$value,
-        label = function() private$..label$value,
-        disSim = function() private$..disSim$value,
-        btwDir = function() private$..btwDir$value,
-        lvlMsr = function() private$..lvlMsr$value,
-        intDis = function() private$..intDis$value,
-        intSim = function() private$..intSim$value,
-        intPwr = function() private$..intPwr$value,
-        intRot = function() private$..intRot$value,
-        cntDis = function() private$..cntDis$value,
-        binDis = function() private$..binDis$value,
-        binSim = function() private$..binSim$value,
-        binPrs = function() private$..binPrs$value,
-        binAbs = function() private$..binAbs$value,
-        xfmMth = function() private$..xfmMth$value,
-        xfmDir = function() private$..xfmDir$value,
-        xfmAbs = function() private$..xfmAbs$value,
-        xfmInv = function() private$..xfmInv$value,
-        xfmRsc = function() private$..xfmRsc$value),
+        label = function() private$..label$value),
     private = list(
         ..vars = NA,
-        ..label = NA,
-        ..disSim = NA,
-        ..btwDir = NA,
-        ..lvlMsr = NA,
-        ..intDis = NA,
-        ..intSim = NA,
-        ..intPwr = NA,
-        ..intRot = NA,
-        ..cntDis = NA,
-        ..binDis = NA,
-        ..binSim = NA,
-        ..binPrs = NA,
-        ..binAbs = NA,
-        ..xfmMth = NA,
-        ..xfmDir = NA,
-        ..xfmAbs = NA,
-        ..xfmInv = NA,
-        ..xfmRsc = NA)
+        ..label = NA)
 )
 
 proximityResults <- if (requireNamespace('jmvcore')) R6::R6Class(
@@ -277,23 +74,6 @@ proximityBase <- if (requireNamespace('jmvcore')) R6::R6Class(
 #' @param data .
 #' @param vars .
 #' @param label .
-#' @param disSim .
-#' @param btwDir .
-#' @param lvlMsr .
-#' @param intDis .
-#' @param intSim .
-#' @param intPwr .
-#' @param intRot .
-#' @param cntDis .
-#' @param binDis .
-#' @param binSim .
-#' @param binPrs .
-#' @param binAbs .
-#' @param xfmMth .
-#' @param xfmDir .
-#' @param xfmAbs .
-#' @param xfmInv .
-#' @param xfmRsc .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
@@ -303,24 +83,7 @@ proximityBase <- if (requireNamespace('jmvcore')) R6::R6Class(
 proximity <- function(
     data,
     vars,
-    label,
-    disSim = "clcDis",
-    btwDir = "btwSbj",
-    lvlMsr = "lvlInt",
-    intDis = "intEuc",
-    intSim = "intCrr",
-    intPwr = 2,
-    intRot = 2,
-    cntDis = "intChi",
-    binDis = "binEuc",
-    binSim = "binRnR",
-    binPrs = 1,
-    binAbs = 0,
-    xfmMth = "xfmNon",
-    xfmDir = "xfmVar",
-    xfmAbs = FALSE,
-    xfmInv = FALSE,
-    xfmRsc = FALSE) {
+    label) {
 
     if ( ! requireNamespace('jmvcore'))
         stop('proximity requires jmvcore to be installed (restart may be required)')
@@ -336,24 +99,7 @@ proximity <- function(
 
     options <- proximityOptions$new(
         vars = vars,
-        label = label,
-        disSim = disSim,
-        btwDir = btwDir,
-        lvlMsr = lvlMsr,
-        intDis = intDis,
-        intSim = intSim,
-        intPwr = intPwr,
-        intRot = intRot,
-        cntDis = cntDis,
-        binDis = binDis,
-        binSim = binSim,
-        binPrs = binPrs,
-        binAbs = binAbs,
-        xfmMth = xfmMth,
-        xfmDir = xfmDir,
-        xfmAbs = xfmAbs,
-        xfmInv = xfmInv,
-        xfmRsc = xfmRsc)
+        label = label)
 
     analysis <- proximityClass$new(
         options = options,

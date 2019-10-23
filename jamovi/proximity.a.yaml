@@ -17,38 +17,38 @@ options:
       title: Label cases by
       type: Variable
 
-    # - name: disSim
-    #   title: Calculate
-    #   type: List
-    #   options:
-    #     - title: Dissimilarities
-    #       name:  clcDis
-    #     - title: Similarities
-    #       name:  clcSim
-    #   default: clcDis
-    #
-    # - name: btwDir
-    #   title: between
-    #   type: List
-    #   options:
-    #     - title: Cases
-    #       name:  btwSbj
-    #     - title: Variables
-    #       name:  btwVar
-    #   default: btwSbj
-    #
-    # - name: lvlMsr
-    #   title: Variable level
-    #   type: List
-    #   options:
-    #     - title: Interval
-    #       name:  lvlInt
-    #     - title: Binary
-    #       name:  lvlBin
-    #     - title: Counts
-    #       name:  lvlCnt
-    #   default: lvlInt
-    #
+    - name: disSim
+      title: Calculate
+      type: List
+      options:
+        - title: Dissimilarities
+          name:  clcDis
+        - title: Similarities
+          name:  clcSim
+      default: clcDis
+
+    - name: btwDir
+      title: between
+      type: List
+      options:
+        - title: Cases
+          name:  btwSbj
+        - title: Variables
+          name:  btwVar
+      default: btwSbj
+
+    - name: lvlMsr
+      title: Variable level
+      type: List
+      options:
+        - title: Interval
+          name:  lvlInt
+        - title: Binary
+          name:  lvlBin
+        - title: Counts
+          name:  lvlCnt
+      default: lvlInt
+
     # # layout box around Interval, Counts and Binary
     # # radio buttons for variable level (left)
     # # measurement choices right
