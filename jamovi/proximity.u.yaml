@@ -48,14 +48,18 @@ children:
         children:
           - type: ComboBox
             name: intDis
+            enable: (clcDis)
           - type: TextBox
             name: intPwr
             format: number
+            enable: (clcDis)
           - type: TextBox
             name: intRot
             format: number
+            enable: (clcDis)            
       - type: ComboBox
         name: intSim
+        enable: (clcSim)
 
   - type: LayoutBox
     margin: large
@@ -63,6 +67,7 @@ children:
     children:
       - type: ComboBox
         name: cntDis
+        enable: (clcDis)
 
   - type: LayoutBox
     margin: large
@@ -70,8 +75,10 @@ children:
     children:
       - type: ComboBox
         name: binDis
+        enable: (clcDis)
       - type: ComboBox
         name: binSim
+        enable: (clcSim)
       - type: TextBox
         name: binPrs
         format: number
