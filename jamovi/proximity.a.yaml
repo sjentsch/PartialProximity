@@ -9,11 +9,11 @@ options:
     - name: data
       type: Data
 
-    - name: pxmVar
+    - name: vars
       title: Variables
       type: Variables
 
-    - name: pxmLbl
+    - name: label
       title: Label cases by
       type: Variable
 
