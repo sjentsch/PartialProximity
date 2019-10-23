@@ -58,3 +58,22 @@ children:
       - type: TextBox
         name: intRot
         format: number
+  - type: LayoutBox
+    margin: large
+    children:
+      - type: ComboBox
+        name: xfmMth
+  - type: LayoutBox
+    margin: large
+    children:
+      - type: ComboBox
+        name: xfmDir
+  - type: LayoutBox
+    margin: large
+    children:
+      - type: CheckBox
+        name: xfmAbs
+      - type: CheckBox
+        name: xfmInv
+      - type: CheckBox
+        name: xfmRsc

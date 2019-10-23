@@ -14,7 +14,12 @@ proximityOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
             intDis = "intEuc",
             intSim = "intCrr",
             intPwr = 2,
-            intRot = 2, ...) {
+            intRot = 2,
+            xfmMth = "xfmNon",
+            xfmDir = "xfmVar",
+            xfmAbs = FALSE,
+            xfmInv = FALSE,
+            xfmRsc = FALSE, ...) {
 
             super$initialize(
                 package='PartialProximity',
@@ -80,6 +85,37 @@ proximityOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
                 default=2,
                 min=1,
                 max=4)
+            private$..xfmMth <- jmvcore::OptionList$new(
+                "xfmMth",
+                xfmMth,
+                options=list(
+                    "xfmNon",
+                    "xfmZsc",
+                    "xfmRNP",
+                    "xfmRZP",
+                    "xfmMag",
+                    "xfmAvr",
+                    "xfmStd"),
+                default="xfmNon")
+            private$..xfmDir <- jmvcore::OptionList$new(
+                "xfmDir",
+                xfmDir,
+                options=list(
+                    "xfmVar",
+                    "xfmSbj"),
+                default="xfmVar")
+            private$..xfmAbs <- jmvcore::OptionBool$new(
+                "xfmAbs",
+                xfmAbs,
+                default=FALSE)
+            private$..xfmInv <- jmvcore::OptionBool$new(
+                "xfmInv",
+                xfmInv,
+                default=FALSE)
+            private$..xfmRsc <- jmvcore::OptionBool$new(
+                "xfmRsc",
+                xfmRsc,
+                default=FALSE)
 
             self$.addOption(private$..vars)
             self$.addOption(private$..label)
@@ -90,6 +126,11 @@ proximityOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
             self$.addOption(private$..intSim)
             self$.addOption(private$..intPwr)
             self$.addOption(private$..intRot)
+            self$.addOption(private$..xfmMth)
+            self$.addOption(private$..xfmDir)
+            self$.addOption(private$..xfmAbs)
+            self$.addOption(private$..xfmInv)
+            self$.addOption(private$..xfmRsc)
         }),
     active = list(
         vars = function() private$..vars$value,
@@ -100,7 +141,12 @@ proximityOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
         intDis = function() private$..intDis$value,
         intSim = function() private$..intSim$value,
         intPwr = function() private$..intPwr$value,
-        intRot = function() private$..intRot$value),
+        intRot = function() private$..intRot$value,
+        xfmMth = function() private$..xfmMth$value,
+        xfmDir = function() private$..xfmDir$value,
+        xfmAbs = function() private$..xfmAbs$value,
+        xfmInv = function() private$..xfmInv$value,
+        xfmRsc = function() private$..xfmRsc$value),
     private = list(
         ..vars = NA,
         ..label = NA,
@@ -110,7 +156,12 @@ proximityOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
         ..intDis = NA,
         ..intSim = NA,
         ..intPwr = NA,
-        ..intRot = NA)
+        ..intRot = NA,
+        ..xfmMth = NA,
+        ..xfmDir = NA,
+        ..xfmAbs = NA,
+        ..xfmInv = NA,
+        ..xfmRsc = NA)
 )
 
 proximityResults <- if (requireNamespace('jmvcore')) R6::R6Class(
@@ -161,6 +212,11 @@ proximityBase <- if (requireNamespace('jmvcore')) R6::R6Class(
 #' @param intSim .
 #' @param intPwr .
 #' @param intRot .
+#' @param xfmMth .
+#' @param xfmDir .
+#' @param xfmAbs .
+#' @param xfmInv .
+#' @param xfmRsc .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
@@ -177,7 +233,12 @@ proximity <- function(
     intDis = "intEuc",
     intSim = "intCrr",
     intPwr = 2,
-    intRot = 2) {
+    intRot = 2,
+    xfmMth = "xfmNon",
+    xfmDir = "xfmVar",
+    xfmAbs = FALSE,
+    xfmInv = FALSE,
+    xfmRsc = FALSE) {
 
     if ( ! requireNamespace('jmvcore'))
         stop('proximity requires jmvcore to be installed (restart may be required)')
@@ -200,7 +261,12 @@ proximity <- function(
         intDis = intDis,
         intSim = intSim,
         intPwr = intPwr,
-        intRot = intRot)
+        intRot = intRot,
+        xfmMth = xfmMth,
+        xfmDir = xfmDir,
+        xfmAbs = xfmAbs,
+        xfmInv = xfmInv,
+        xfmRsc = xfmRsc)
 
     analysis <- proximityClass$new(
         options = options,

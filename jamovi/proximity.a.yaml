@@ -94,92 +94,92 @@ options:
       min: 1
       max: 4
 
-    # - name: cntDis
-    #   title: Measure
-    #   type: List
-    #   options:
-    #     - title: Chi-square measure
-    #       name:  cntChi
-    #     - title: Phi-square measure
-    #       name:  cntPhi
-    #   default: intChi
-    #
-    # - name: binDis
-    #   title: Measure
-    #   type: List
-    #   options:
-    #     - title: Euclidian distance
-    #       name:  binEuc
-    #     - title: Squared Euclidian distance
-    #       name:  binSqE
-    #     - title: Size difference
-    #       name:  binSzD
-    #     - title: Pattern difference
-    #       name:  binPtD
-    #     - title: Variance
-    #       name:  binVar
-    #     - title: Shape
-    #       name:  binShp
-    #     - title: Lance and Williams
-    #       name:  binLnW
-    #   default: binEuc
-    #
-    # - name: binSim
-    #   title: Measure
-    #   type: List
-    #   options:
-    #     - title: Russel and Rao
-    #       name:  binRnR
-    #     - title: Simple matching
-    #       name:  binSmM
-    #     - title: Jaccard
-    #       name:  binJcc
-    #     - title: Dice
-    #       name:  binDic
-    #     - title: Rogers and Tanimoto
-    #       name:  binRnT
-    #     - title: Sokal and Sneath 1
-    #       name:  binSk1
-    #     - title: Sokal and Sneath 2
-    #       name:  binSk2
-    #     - title: Sokal and Sneath 3
-    #       name:  binSk3
-    #     - title: Kulczynski 1
-    #       name:  binKc1
-    #     - title: Kulczynski 2
-    #       name:  binKc2
-    #     - title: Sokal and Sneath 4
-    #       name:  binSk4
-    #     - title: Hamann
-    #       name:  binHmn
-    #     - title: Lambda
-    #       name:  binLmb
-    #     - title: Anderberg's D
-    #       name:  binAnD
-    #     - title: Yule's Y
-    #       name:  binYlY
-    #     - title: Yule's Q
-    #       name:  binYlQ
-    #     - title: Ochiai
-    #       name:  binOch
-    #     - title: Sokal and Sneath 5
-    #       name:  binSk5
-    #     - title: Phi 4-point correlation
-    #       name:  binPh4
-    #     - title: Dispersion
-    #       name:  binDsp
-    #   default: binRnR
-    #
-    # - name: binPrs
-    #   title: Present
-    #   type: Number
-    #   default: 1
-    #
-    # - name: binAbs
-    #   title: Absent
-    #   type: Number
-    #   default: 0
-    #
+    - name: cntDis
+      title: Measure
+      type: List
+      options:
+        - title: Chi-square measure
+          name:  cntChi
+        - title: Phi-square measure
+          name:  cntPhi
+      default: cntChi
+
+    - name: binDis
+      title: Measure
+      type: List
+      options:
+        - title: Euclidian distance
+          name:  binEuc
+        - title: Squared Euclidian distance
+          name:  binSqE
+        - title: Size difference
+          name:  binSzD
+        - title: Pattern difference
+          name:  binPtD
+        - title: Variance
+          name:  binVar
+        - title: Shape
+          name:  binShp
+        - title: Lance and Williams
+          name:  binLnW
+      default: binEuc
+
+    - name: binSim
+      title: Measure
+      type: List
+      options:
+        - title: Russel and Rao
+          name:  binRnR
+        - title: Simple matching
+          name:  binSmM
+        - title: Jaccard
+          name:  binJcc
+        - title: Dice
+          name:  binDic
+        - title: Rogers and Tanimoto
+          name:  binRnT
+        - title: Sokal and Sneath 1
+          name:  binSk1
+        - title: Sokal and Sneath 2
+          name:  binSk2
+        - title: Sokal and Sneath 3
+          name:  binSk3
+        - title: Kulczynski 1
+          name:  binKc1
+        - title: Kulczynski 2
+          name:  binKc2
+        - title: Sokal and Sneath 4
+          name:  binSk4
+        - title: Hamann
+          name:  binHmn
+        - title: Lambda
+          name:  binLmb
+        - title: Anderberg's D
+          name:  binAnD
+        - title: Yule's Y
+          name:  binYlY
+        - title: Yule's Q
+          name:  binYlQ
+        - title: Ochiai
+          name:  binOch
+        - title: Sokal and Sneath 5
+          name:  binSk5
+        - title: Phi 4-point correlation
+          name:  binPh4
+        - title: Dispersion
+          name:  binDsp
+      default: binRnR
+
+    - name: binPrs
+      title: Present
+      type: Number
+      default: 1
+
+    - name: binAbs
+      title: Absent
+      type: Number
+      default: 0
+
     # the next two go in a layout box (Transform Values)
     # transformation on the data matrix before calculating the proximity measure
     - name: xfmMth
