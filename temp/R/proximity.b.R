@@ -19,8 +19,8 @@ proximityClass <- if (requireNamespace('jmvcore')) R6::R6Class(
                 numIvN = length(blnVld[!blnVld])
                 # for binary data, ensure that these only contain the two categories defined by lvlMsr == lvlBin
                 if (self$options$get('lvlMsr') == 'lvlBin') {
-print(str(self$options$get('binPrs')))
-print(str(self$options$get('binAbs')))
+print(str(self$options$get('binPrs'))
+print(str(self$options$get('binAbs'))
 print(dtaMtx == self$options$get('binPrs'))
 print(dtaMtx == self$options$get('binAbs'))
                     blnBnC = apply(dtaMtx == self$options$get('binPrs') | dtaMtx == self$options$get('binAbs'), 1, all)
