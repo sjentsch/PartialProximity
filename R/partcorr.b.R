@@ -38,16 +38,8 @@ partcorrClass <- if (requireNamespace('jmvcore')) R6::R6Class(
                 matrix$setRow(rowKey=varCrr[[i]], values)
             }
             # initialize the results table (assign the notes underneath)
-            if (length(varCtl) > 0)
-                matrix$setNote('ctlNte', paste0('Controlling for ', paste(varCtl, collapse=", ")))
-            if      (  self$options$get('flgSig') && self$options$get('sidSig') == 'onetailed')
-                matrix$setNote('sigNte', '* p < .05, ** p < .01, *** p < .001, one-tailed')
-            else if (  self$options$get('flgSig') && self$options$get('sidSig') == 'twotailed')
-                matrix$setNote('sigNte', '* p < .05, ** p < .01, *** p < .001, two-tailed')
-            else if (! self$options$get('flgSig') && self$options$get('sidSig') == 'onetailed')
-                matrix$setNote('sigNte', 'One-tailed significance')
-            else if (! self$options$get('flgSig') && self$options$get('sidSig') == 'twotailed')
-                matrix$setNote('sigNte', 'Two-tailed significance')
+            matrix$setNote('ctlNte', ifelse(length(varCtl) > 0, paste0('Controlling for ', paste(varCtl, collapse=", ")), 'Not controlling for any variables, i.e. the table shows correlations'))
+            matrix$setNote('sigNte', paste0(ifelse(self$options$get('flgSig'), '* p < .05, ** p < .01, *** p < .001, ', ''), ifelse(self$options$get('sidSig') == 'onetailed', 'one-tailed', 'two-tailed')))
         },
         # ====================================================
         .run = function() {
