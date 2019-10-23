@@ -12,24 +12,20 @@ proximityClass <- if (requireNamespace('jmvcore')) R6::R6Class(
             pxmLbl = self$options$get('label')
             if (length(pxmVar) > 1) {
 print('init')
-dtaRaw = self$options$.getData()
-print(str(dtaRaw))
-saveRDS(dtaRaw, file='/home/sjentsch/Downloads/Trial1.rds')
+dtaRw1 = self$options$.getData()
+dtaRw2 = self$data
+print(str(dtaRw1))
+print(str(dtaRw2))
+print(self$options)
+print(self$results)
                 dtaMtx = self$data[, pxmVar]
-saveRDS(dtaMtx, file='/home/sjentsch/Downloads/Trial2.rds')
-print(self$data)
-print(str(dtaMtx))
                 sbjLbl = self$data[, pxmLbl]
                 blnVld = !apply(is.na(dtaMtx), 1, any)
-print(blnVld)
                 dtaMtx = dtaMtx[blnVld, ]
                 sbjLbl = sbjLbl[blnVld, ]
                 numIvN = length(blnVld[!blnVld])
                 # for binary data, ensure that these only contain the two categories defined by lvlMsr == lvlBin
                 if (self$options$get('lvlMsr') == 'lvlBin') {
-print(c(self$options$get('binAbs'), self$options$get('binPrs')))
-print(str(dtaMtx))
-print(as.matrix(dtaMtx) == as.numeric(self$options$get('binPrs')))
                     blnBnC = apply(dtaMtx == as.numeric(self$options$get('binPrs')) | dtaMtx == as.numeric(self$options$get('binAbs')), 1, all)
                     dtaMtx = dtaMtx[blnBnC, ]
                     sbjLbl = sbjLbl[blnBnC, ]
@@ -49,9 +45,7 @@ print(as.matrix(dtaMtx) == as.numeric(self$options$get('binPrs')))
             pxmVar = self$options$get('vars')
             if (length(pxmVar) > 1) {
 print('run')
-print(self$data)
                 dtaMtx = self$data[, pxmVar]
-print(dtaMtx)
                 blnVld = !apply(is.na(dtaMtx), 1, any)
                 dtaMtx = dtaMtx[blnVld, ]
                 # for binary data, ensure that these only contain the two categories defined by lvlMsr == lvlBin
