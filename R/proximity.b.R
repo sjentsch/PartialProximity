@@ -13,9 +13,11 @@ proximityClass <- if (requireNamespace('jmvcore')) R6::R6Class(
             if (length(pxmVar) > 1) {
 print('init')
 dtaRaw = self$data
+print(str(dtaRaw))
 saveRDS(dtaRaw, file='/home/sjentsch/Downloads/Trial1.rds')
                 dtaMtx = self$data[, pxmVar]
 saveRDS(dtaMtx, file='/home/sjentsch/Downloads/Trial2.rds')
+print(self$data)
 print(str(dtaMtx))
                 sbjLbl = self$data[, pxmLbl]
                 blnVld = !apply(is.na(dtaMtx), 1, any)
@@ -47,7 +49,9 @@ print(as.matrix(dtaMtx) == as.numeric(self$options$get('binPrs')))
             pxmVar = self$options$get('vars')
             if (length(pxmVar) > 1) {
 print('run')
+print(self$data)
                 dtaMtx = self$data[, pxmVar]
+print(dtaMtx)                
                 blnVld = !apply(is.na(dtaMtx), 1, any)
                 dtaMtx = dtaMtx[blnVld, ]
                 # for binary data, ensure that these only contain the two categories defined by lvlMsr == lvlBin
