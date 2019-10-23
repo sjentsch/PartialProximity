@@ -1,7 +1,0 @@
-exportPattern("^[[:alpha:]]+")
-
-export(partcorrClass)
-export(partcorrOptions)
-
-export(proximityClass)
-export(proximityOptions)
