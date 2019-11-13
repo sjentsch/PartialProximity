@@ -34,7 +34,9 @@ proximityOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
 
             private$..vars <- jmvcore::OptionVariables$new(
                 "vars",
-                vars)
+                vars,
+                permitted=list(
+                    "numeric"))
             private$..label <- jmvcore::OptionVariable$new(
                 "label",
                 label)
@@ -239,7 +241,8 @@ proximityOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
 proximityResults <- if (requireNamespace('jmvcore')) R6::R6Class(
     inherit = jmvcore::Group,
     active = list(
-        matrix = function() private$.items[["matrix"]]),
+        mtxSbj = function() private$.items[["mtxSbj"]],
+        mtxVar = function() private$.items[["mtxVar"]]),
     private = list(),
     public=list(
         initialize=function(options) {
@@ -249,24 +252,31 @@ proximityResults <- if (requireNamespace('jmvcore')) R6::R6Class(
                 title="Distances")
             self$add(jmvcore::Table$new(
                 options=options,
-                name="matrix",
-                title="Matrix with Proximity Measures",
+                name="mtxSbj",
+                title="Proximity Measures",
                 rows=0,
                 clearWith=list(
                     "shwSig",
                     "sidSig"),
                 columns=list(
                     list(
-                        `name`=".name[r]", 
+                        `name`=".name", 
+                        `title`="", 
+                        `type`="text"))))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="mtxVar",
+                title="Proximity Measures",
+                rows="(vars)",
+                clearWith=list(
+                    "shwSig",
+                    "sidSig"),
+                columns=list(
+                    list(
+                        `name`=".name", 
                         `title`="", 
                         `type`="text", 
-                        `content`="($key)", 
-                        `combineBelow`=TRUE),
-                    list(
-                        `name`=".stat[r]", 
-                        `title`="", 
-                        `type`="number", 
-                        `content`="Proximity measure"))))}))
+                        `content`="($key)"))))}))
 
 proximityBase <- if (requireNamespace('jmvcore')) R6::R6Class(
     "proximityBase",
@@ -312,14 +322,15 @@ proximityBase <- if (requireNamespace('jmvcore')) R6::R6Class(
 #' @param xfmRsc .
 #' @return A results object containing:
 #' \tabular{llllll}{
-#'   \code{results$matrix} \tab \tab \tab \tab \tab Matrix table with proximity measures \cr
+#'   \code{results$mtxSbj} \tab \tab \tab \tab \tab Matrix table with proximity measures \cr
+#'   \code{results$mtxVar} \tab \tab \tab \tab \tab Matrix table with proximity measures \cr
 #' }
 #'
 #' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
 #'
-#' \code{results$matrix$asDF}
+#' \code{results$mtxSbj$asDF}
 #'
-#' \code{as.data.frame(results$matrix)}
+#' \code{as.data.frame(results$mtxSbj)}
 #'
 #' @export
 proximity <- function(

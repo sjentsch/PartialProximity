@@ -2,7 +2,8 @@ title: Partial Correlation
 name: partcorr
 jus: '3.0'
 stage: 0
-compilerMode: aggressive
+compilerMode: tame
+
 children:
   - type: VariableSupplier
     persistentItems: false
@@ -20,6 +21,7 @@ children:
           - type: VariablesListBox
             name: ctrlvars
             isTarget: true
+
   - type: LayoutBox
     margin: large
     children:
@@ -27,6 +29,7 @@ children:
         name: shwSig
       - type: CheckBox
         name: flgSig
+
   - type: LayoutBox
     margin: large
     children:

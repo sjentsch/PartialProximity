@@ -12,6 +12,7 @@ options:
     - name: vars
       title: Variables
       type: Variables
+      permitted: [ numeric ]
 
     - name: label
       title: Label cases by

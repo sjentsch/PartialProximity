@@ -10,7 +10,9 @@ date: '2019-10-16'
 type: R
 description: >-
   Calculates partial correlations and distance or similarity measures Replaces
-  the SPSS functions PARTIAL CORR and PROXIMITIES
+  the SPSS functions PARTIAL CORR and PROXIMITIES The implementation of the
+  algorithms for PROXIMITIES largely follows
+  www.ibm.com/support/knowledgecenter/SSLVMB_22.0.0/com.ibm.spss.statistics.algorithms/alg_proximities.htm
 analyses:
   - title: Partial Correlation
     name: partcorr
