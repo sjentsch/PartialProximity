@@ -91,7 +91,8 @@ proximityClass <- if (requireNamespace("jmvcore")) R6::R6Class(
                     for (i in seq_along(pxmVar)) {
                         values <- list()
                         for (j in seq_along(pxmVar)) {
-                            values[[pxmVar[[j]]]]  = ifelse(i > j, resMtx[i, j], ifelse(i < j, "", "\u2014"))
+#                           values[[pxmVar[[j]]]]  = ifelse(i > j, resMtx[i, j], ifelse(i < j, "", "\u2014"))
+                            values[[pxmVar[[j]]]]  = resMtx[i, j]
                         }
                         mtxVar$setRow(rowNo=i, values)
                     }
@@ -115,7 +116,8 @@ proximityClass <- if (requireNamespace("jmvcore")) R6::R6Class(
                         values <- list()
                         values[[".name"]] = sbjLbl[[i]]
                         for (j in seq_along(sbjLbl)) {
-                            values[[sbjLbl[[j]]]] = ifelse(i > j, resMtx[i, j], ifelse(i < j, "", "\u2014"))
+#                           values[[sbjLbl[[j]]]] = ifelse(i > j, resMtx[i, j], ifelse(i < j, "", "\u2014"))
+                            values[[sbjLbl[[j]]]] = resMtx[i, j]
                         }
 
                         mtxSbj$addRow(rowKey=sbjLbl[[i]], values)

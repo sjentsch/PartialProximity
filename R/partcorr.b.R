@@ -20,6 +20,9 @@ partcorrClass <- if (requireNamespace('jmvcore')) R6::R6Class(
             varCrr <- self$options$get('corrvars')
             varCtl <- self$options$get('ctrlvars')
 
+            # set title according to whether the procedure is controlling for variables or not
+            matrix$title = ifelse(length(varCtl) > 0, 'Partial Correlation Matrix', 'Correlation Matrix')
+
             # initialize the results table (add the required number of columns)
             for (i in seq_along(varCrr)) {
                 matrix$addColumn(name=paste0(varCrr[[i]], '[r]'),  title=varCrr[[i]], type='number', format='zto')
