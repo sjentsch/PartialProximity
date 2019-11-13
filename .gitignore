@@ -1,3 +1,13 @@
+# this file
+.gitignore
+
+# build and temp directories
+build
+temp
+
+# jamovi-modules
+*.jmo
+
 # History files
 .Rhistory
 .Rapp.history
