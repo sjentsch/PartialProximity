@@ -30,65 +30,71 @@ children:
       - type: ComboBox
         name: disSim
       - type: ComboBox
+        name: lvlMsr
+      - type: ComboBox
         name: btwDir
 
   - type: LayoutBox
     margin: large
-    children:
-      - type: ComboBox
-        name: lvlMsr
-
-  - type: LayoutBox
-    margin: large
     style: list
     children:
-      - type: LayoutBox
-        margin: large
-        style: inline
+      - type: Label
+        label: Interval data
+        children:
+          - type: LayoutBox
+            margin: none
+            style: inline
+            children:
+              - type: ComboBox
+                name: intDis
+                enable: (disSim:clcDis && lvlMsr:lvlInt)
+              - type: TextBox
+                name: intPwr
+                format: number
+                enable: (disSim:clcDis && lvlMsr:lvlInt && intDis:intMnk || intDis:intCst)
+              - type: TextBox
+                name: intRot
+                format: number
+                enable: (disSim:clcDis && lvlMsr:lvlInt && intDis:intCst)
+          - type: ComboBox
+            name: intSim
+            enable: (disSim:clcSim && lvlMsr:lvlInt)
+      - type: Label
+        label: Count / frequency data
         children:
           - type: ComboBox
-            name: intDis
-            enable: (clcDis)
-          - type: TextBox
-            name: intPwr
-            format: number
-            enable: (clcDis)
-          - type: TextBox
-            name: intRot
-            format: number
-            enable: (clcDis)
-      - type: ComboBox
-        name: intSim
-        enable: (clcSim)
-
-  - type: LayoutBox
-    margin: large
-    style: inline
-    children:
-      - type: ComboBox
-        name: cntDis
-        enable: (clcDis)
-
-  - type: LayoutBox
-    margin: large
-    style: list
-    children:
-      - type: LayoutBox
-        margin: large
-        style: inline
+            name: cntDis
+            enable: (disSim:clcDis && lvlMsr:lvlCnt)
+      - type: Label
+        label: Binary data
         children:
-          - type: ComboBox
-            name: binDis
-            enable: (clcDis)
-          - type: TextBox
-            name: binPrs
-            format: number
-          - type: TextBox
-            name: binAbs
-            format: number
-      - type: ComboBox
-        name: binSim
-        enable: (clcSim)
+          - type: LayoutBox
+            margin: none
+            style: inline
+            children:
+              - type: LayoutBox
+                margin: none
+                style: list
+                children:
+                  - type: ComboBox
+                    name: binDis
+                    enable: (disSim:clcDis && lvlMsr:lvlBin)
+                  - type: ComboBox
+                    name: binSim
+                    enable: (disSim:clcSim && lvlMsr:lvlBin)
+              - type: LayoutBox
+                margin: large
+                style: inline
+                verticalAlignment: center
+                children:
+                  - type: TextBox
+                    name: binPrs
+                    format: number
+                    enable: (lvlMsr:lvlBin)
+                  - type: TextBox
+                    name: binAbs
+                    format: number
+                    enable: (lvlMsr:lvlBin)
 
   - type: CollapseBox
     margin: large

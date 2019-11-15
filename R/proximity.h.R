@@ -9,8 +9,8 @@ proximityOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
             vars = NULL,
             label = NULL,
             disSim = "clcDis",
-            btwDir = "btwSbj",
             lvlMsr = "lvlInt",
+            btwDir = "btwSbj",
             intDis = "intEuc",
             intSim = "intCrr",
             intPwr = 2,
@@ -47,6 +47,14 @@ proximityOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
                     "clcDis",
                     "clcSim"),
                 default="clcDis")
+            private$..lvlMsr <- jmvcore::OptionList$new(
+                "lvlMsr",
+                lvlMsr,
+                options=list(
+                    "lvlInt",
+                    "lvlCnt",
+                    "lvlBin"),
+                default="lvlInt")
             private$..btwDir <- jmvcore::OptionList$new(
                 "btwDir",
                 btwDir,
@@ -54,14 +62,6 @@ proximityOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
                     "btwSbj",
                     "btwVar"),
                 default="btwSbj")
-            private$..lvlMsr <- jmvcore::OptionList$new(
-                "lvlMsr",
-                lvlMsr,
-                options=list(
-                    "lvlInt",
-                    "lvlBin",
-                    "lvlCnt"),
-                default="lvlInt")
             private$..intDis <- jmvcore::OptionList$new(
                 "intDis",
                 intDis,
@@ -179,8 +179,8 @@ proximityOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
             self$.addOption(private$..vars)
             self$.addOption(private$..label)
             self$.addOption(private$..disSim)
-            self$.addOption(private$..btwDir)
             self$.addOption(private$..lvlMsr)
+            self$.addOption(private$..btwDir)
             self$.addOption(private$..intDis)
             self$.addOption(private$..intSim)
             self$.addOption(private$..intPwr)
@@ -200,8 +200,8 @@ proximityOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
         vars = function() private$..vars$value,
         label = function() private$..label$value,
         disSim = function() private$..disSim$value,
-        btwDir = function() private$..btwDir$value,
         lvlMsr = function() private$..lvlMsr$value,
+        btwDir = function() private$..btwDir$value,
         intDis = function() private$..intDis$value,
         intSim = function() private$..intSim$value,
         intPwr = function() private$..intPwr$value,
@@ -220,8 +220,8 @@ proximityOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
         ..vars = NA,
         ..label = NA,
         ..disSim = NA,
-        ..btwDir = NA,
         ..lvlMsr = NA,
+        ..btwDir = NA,
         ..intDis = NA,
         ..intSim = NA,
         ..intPwr = NA,
@@ -304,8 +304,8 @@ proximityBase <- if (requireNamespace('jmvcore')) R6::R6Class(
 #' @param vars .
 #' @param label .
 #' @param disSim .
-#' @param btwDir .
 #' @param lvlMsr .
+#' @param btwDir .
 #' @param intDis .
 #' @param intSim .
 #' @param intPwr .
@@ -338,8 +338,8 @@ proximity <- function(
     vars,
     label,
     disSim = "clcDis",
-    btwDir = "btwSbj",
     lvlMsr = "lvlInt",
+    btwDir = "btwSbj",
     intDis = "intEuc",
     intSim = "intCrr",
     intPwr = 2,
@@ -371,8 +371,8 @@ proximity <- function(
         vars = vars,
         label = label,
         disSim = disSim,
-        btwDir = btwDir,
         lvlMsr = lvlMsr,
+        btwDir = btwDir,
         intDis = intDis,
         intSim = intSim,
         intPwr = intPwr,
