@@ -12,11 +12,14 @@ options:
     - name: vars
       title: Variables
       type: Variables
+      suggested: [ continuous ]
       permitted: [ numeric ]
 
     - name: label
       title: Label cases by
       type: Variable
+      suggested: [ nominal,id ]
+      permitted: [ factor,id ]
 
     - name: disSim
       title: Calculate
@@ -54,7 +57,7 @@ options:
     # radio buttons for variable level (left)
     # measurement choices right
     - name: intDis
-      title: Measure
+      title: Dissimilarity
       type: List
       options:
         - title: Euclidian distance
@@ -72,7 +75,7 @@ options:
       default: intEuc
 
     - name: intSim
-      title: Measure
+      title: Similarity
       type: List
       options:
         - title: Pearson correlation
@@ -96,7 +99,7 @@ options:
       max: 4
 
     - name: cntDis
-      title: Measure
+      title: Dissimilarity
       type: List
       options:
         - title: Chi-square measure
@@ -106,7 +109,7 @@ options:
       default: cntChi
 
     - name: binDis
-      title: Measure
+      title: Dissimilarity
       type: List
       options:
         - title: Euclidian distance
@@ -126,7 +129,7 @@ options:
       default: binEuc
 
     - name: binSim
-      title: Measure
+      title: Similarity
       type: List
       options:
         - title: Russel and Rao

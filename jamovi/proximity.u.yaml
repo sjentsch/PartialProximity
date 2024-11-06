@@ -45,20 +45,28 @@ children:
             margin: none
             style: inline
             children:
-              - type: ComboBox
-                name: intDis
-                enable: (disSim:clcDis && lvlMsr:lvlInt)
-              - type: TextBox
-                name: intPwr
-                format: number
-                enable: (disSim:clcDis && lvlMsr:lvlInt && intDis:intMnk || intDis:intCst)
-              - type: TextBox
-                name: intRot
-                format: number
-                enable: (disSim:clcDis && lvlMsr:lvlInt && intDis:intCst)
-          - type: ComboBox
-            name: intSim
-            enable: (disSim:clcSim && lvlMsr:lvlInt)
+              - type: LayoutBox
+                margin: none
+                style: list
+                children:
+                  - type: ComboBox
+                    name: intDis
+                    enable: (disSim:clcDis && lvlMsr:lvlInt)
+                  - type: ComboBox
+                    name: intSim
+                    enable: (disSim:clcSim && lvlMsr:lvlInt)
+              - type: LayoutBox
+                margin: none
+                style: inline
+                children:
+                  - type: TextBox
+                    name: intPwr
+                    format: number
+                    enable: (disSim:clcDis && lvlMsr:lvlInt && intDis:intMnk || intDis:intCst)
+                  - type: TextBox
+                    name: intRot
+                    format: number
+                    enable: (disSim:clcDis && lvlMsr:lvlInt && intDis:intCst)
       - type: Label
         label: Count / frequency data
         children:
@@ -104,8 +112,10 @@ children:
     children:
       - type: ComboBox
         name: xfmMth
+        enable: (lvlMsr:lvlInt || lvlMsr:lvlCnt)
       - type: ComboBox
         name: xfmDir
+        enable: (lvlMsr:lvlInt || lvlMsr:lvlCnt)
 
   - type: CollapseBox
     margin: large

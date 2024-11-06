@@ -21,17 +21,23 @@ children:
           - type: VariablesListBox
             name: ctrlvars
             isTarget: true
-
   - type: LayoutBox
     margin: large
+    style: inline
     children:
-      - type: CheckBox
-        name: shwSig
-      - type: CheckBox
-        name: flgSig
+      - type: LayoutBox
+        style: list
+        margin: large
+        children:
+          - type: CheckBox
+            name: shwSig
+          - type: CheckBox
+            name: flgSig
+      - type: LayoutBox
+        style: inline
+        margin: none
+        children:
+          - type: ComboBox
+            label: with significance level 
+            name: sidSig
 
-  - type: LayoutBox
-    margin: large
-    children:
-      - type: ComboBox
-        name: sidSig

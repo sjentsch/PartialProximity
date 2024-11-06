@@ -24,5 +24,7 @@ analyses:
     ns: PartialProximity
     menuGroup: Regression
     menuTitle: Distances
+usesNative: true
+minApp: 1.0.8
 
 ...

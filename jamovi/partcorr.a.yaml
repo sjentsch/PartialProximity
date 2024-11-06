@@ -35,9 +35,9 @@ options:
       title: Test of Significance
       type: List
       options:
-        - title: One-tailed
+        - title: one-tailed
           name:  onetailed
-        - title: Two-tailed
+        - title: two-tailed
           name:  twotailed
       default: twotailed
 

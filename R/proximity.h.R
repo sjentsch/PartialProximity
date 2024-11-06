@@ -35,11 +35,19 @@ proximityOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
             private$..vars <- jmvcore::OptionVariables$new(
                 "vars",
                 vars,
+                suggested=list(
+                    "continuous"),
                 permitted=list(
                     "numeric"))
             private$..label <- jmvcore::OptionVariable$new(
                 "label",
-                label)
+                label,
+                suggested=list(
+                    "nominal",
+                    "id"),
+                permitted=list(
+                    "factor",
+                    "id"))
             private$..disSim <- jmvcore::OptionList$new(
                 "disSim",
                 disSim,
@@ -241,6 +249,7 @@ proximityOptions <- if (requireNamespace('jmvcore')) R6::R6Class(
 proximityResults <- if (requireNamespace('jmvcore')) R6::R6Class(
     inherit = jmvcore::Group,
     active = list(
+        txtPfm = function() private$.items[["txtPfm"]],
         mtxSbj = function() private$.items[["mtxSbj"]],
         mtxVar = function() private$.items[["mtxVar"]]),
     private = list(),
@@ -250,6 +259,10 @@ proximityResults <- if (requireNamespace('jmvcore')) R6::R6Class(
                 options=options,
                 name="",
                 title="Distances")
+            self$add(jmvcore::Preformatted$new(
+                options=options,
+                name="txtPfm",
+                title="Proximity Measures"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="mtxSbj",
@@ -294,7 +307,8 @@ proximityBase <- if (requireNamespace('jmvcore')) R6::R6Class(
                 analysisId = analysisId,
                 revision = revision,
                 pause = NULL,
-                completeWhenFilled = FALSE)
+                completeWhenFilled = FALSE,
+                requiresMissings = FALSE)
         }))
 
 #' Distances
@@ -322,6 +336,7 @@ proximityBase <- if (requireNamespace('jmvcore')) R6::R6Class(
 #' @param xfmRsc .
 #' @return A results object containing:
 #' \tabular{llllll}{
+#'   \code{results$txtPfm} \tab \tab \tab \tab \tab a preformatted \cr
 #'   \code{results$mtxSbj} \tab \tab \tab \tab \tab Matrix table with proximity measures \cr
 #'   \code{results$mtxVar} \tab \tab \tab \tab \tab Matrix table with proximity measures \cr
 #' }

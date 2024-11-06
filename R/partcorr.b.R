@@ -56,8 +56,8 @@ partcorrClass <- if (requireNamespace('jmvcore')) R6::R6Class(
             # there are at least two variables required to calculate a (partial) correlation
             # if the variable to control for is empty, calculate a standard correlation
             if (lngCrr > 1) {
-               m  <- as.matrix(cor(self$data[, c(varCrr, varCtl)], use='pairwise', method='pearson'))
-               X  <-       m[varCrr, varCrr]
+               m  <- cor(do.call("cbind", lapply(self$data[, c(varCrr, varCtl)], jmvcore::toNumeric)), use='pairwise', method='pearson')
+               X  <- m[varCrr, varCrr]
                if (lngCtl > 0) {
      	           Y  <-       m[varCrr, varCtl]
                    pi <- solve(m[varCtl, varCtl])

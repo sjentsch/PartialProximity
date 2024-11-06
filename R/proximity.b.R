@@ -4,8 +4,9 @@ proximityClass <- if (requireNamespace("jmvcore")) R6::R6Class(
     private = list(
         # ====================================================
         .init = function() {
-            mtxSbj = self$results$mtxSbj$setVisible(FALSE)
-            mtxVar = self$results$mtxVar$setVisible(FALSE)
+            self$results$txtPfm$setVisible(FALSE)
+            self$results$mtxSbj$setVisible(FALSE)
+            self$results$mtxVar$setVisible(FALSE)
         },
         # ====================================================
         .run = function() {
@@ -17,14 +18,13 @@ proximityClass <- if (requireNamespace("jmvcore")) R6::R6Class(
                 pxmLbl = self$options$get("label")
                 mtxSbj = self$results$get("mtxSbj")
                 mtxVar = self$results$get("mtxVar")
-                lvlBin = (self$options$get("lvlMsr") == "lvlBin")
-                lvlCnt = (self$options$get("lvlMsr") == "lvlCnt")
-                lvlInt = (self$options$get("lvlMsr") == "lvlInt")
-                btwSbj = (self$options$get("btwDir") == "btwSbj")
-                btwVar = (self$options$get("btwDir") == "btwVar")
-                binAbs = as.numeric(self$options$get("binAbs"))
-                binPrs = as.numeric(self$options$get("binPrs"))
 
+                # extract level name, method cetgory (simil. / dissim.), method name and description
+                lvlNme = tolower(substr(self$options$get("lvlMsr"), 4, 6))
+                mthNme = self$options$get(paste0(lvlNme, substr(self$options$get("disSim"), 4, 6)))
+                mthDsc = paste0(nmePxm(mthNme), " (SPSS: ", spsPxm(mthNme), ")")
+
+                # prepare data matrix (check for missing values, etc.)
                 numSbj = dim(self$data)[1]
                 dtaMtx = self$data[, pxmVar]
                 sbjLbl = as.list(sprintf(paste0("C %", sprintf("%d", ceiling(log10(numSbj))), "d"), seq(1:numSbj)))
@@ -39,49 +39,60 @@ proximityClass <- if (requireNamespace("jmvcore")) R6::R6Class(
                 numIvN = length(blnVld[!blnVld])
                 # for binary data, ensure that these only contain the two categories defined by binAbs and binPrs
                 numIvB = 0
-                if (lvlBin) {
-                    blnAbs = (dtaMtx == as.numeric(self$options$get("binAbs")))
-                    blnPrs = (dtaMtx == as.numeric(self$options$get("binPrs")))
+                mthExp = c(0, 0)
+                if      (lvlNme == "bin") {
+                    binAbs = as.numeric(self$options$get("binAbs"))
+                    binPrs = as.numeric(self$options$get("binPrs"))
+                    # determine matrix positions for present and absent and replace them with 0 (for absent) and 1 (for present)
+                    blnAbs = (dtaMtx == binAbs)
+                    blnPrs = (dtaMtx == binPrs)
+                    dtaMtx[blnAbs] = 0
+                    dtaMtx[blnPrs] = 1
+                    # determine lines that contain cell that are neither coded as present or absent and remove those
                     blnBnC = apply(blnAbs | blnPrs, 1, all)
                     dtaMtx = dtaMtx[blnBnC, ]
                     sbjLbl = sbjLbl[blnBnC]
-                    blnAbs = blnAbs[blnBnC, ]
-                    blnPrs = blnPrs[blnBnC, ]
                     numIvB = length(blnBnC[!blnBnC])
-                    # replace absent with 0 and present with 1
-                    dtaMtx(blnAbs) = 0
-                    dtaMtx(blnPrs) = 1
+                    # adjust methods description (footnote in results table): replace placeholder for present and absent with their codes
+                    mthDsc = gsub("_BA_", sprintf('%d', binAbs),    gsub("_BP_", sprintf('%d', binPrs),    mthDsc))
                 }
-                clcDis = (self$options$get("disSim") == "clcDis")
-                clcSim = (self$options$get("disSim") == "clcSim")
-                lvlNme = ifelse(lvlInt, "int", ifelse(lvlCnt, "cnt", ifelse(lvlBin, "bin", "")))
-                mthNme = paste0(lvlNme, substr(self$options$get(paste0(lvlNme, ifelse(clcDis, "Dis", ifelse(clcSim, "Sim", "")))), 4, 6))
-                mthExp = c(self$options$get("intPwr"), self$options$get("intRot"))
-
-                # include R-file with the algorithms
-# doesn't work
-                # transform data (if necessary)
-                # The Transform Values group allows you to standardize data values for either cases or variables before computing proximities.
-                # These transformations are not applicable to binary data. Available standardization methods are z scores, range –1 to 1,
-                # range 0 to 1, maximum magnitude of 1, mean of 1, and standard deviation of 1.
-                if (self$options$get("xfmMth") != "xfmNon")
-                    dtaMtx = xfmDta(dtaMtx, self$options$get("xfmMth"), self$options$get("xfmDir"))
-                # transpose the matrix if similarities between subject are to be calculated
-                if (btwSbj)
-                    dtaMtx = t(dtaMtx)
+                else if (lvlNme == "int") {
+                    # assign method exponent and adjust methods description (footnote in results table): replace placeholder for method exponent with the values used 
+                    mthExp = c(self$options$get("intPwr"), self$options$get("intRot"))
+                    mthDsc = gsub("_IP_", sprintf('%d', mthExp[1]), gsub("_IR_", sprintf('%d', mthExp[2]), mthDsc))
+                }
 
                 # calculate proximity measures
+                # dtaMtx is the data matrix with subjects in rows and variables in columns;
+                #     to calculate similarities between subjects / cases the matrix needs to be transposed 
+                if (self$options$get("btwDir") == "btwSbj")
+                    dtaMtx = t(dtaMtx)
+                # xfmRwM and xfmRwD indicate whether a standardization should be applied to the data values for either cases or variables
+                # before computing proximities (NB: not applicable to binary data)
+                # xfmRwM is a character, indication the transformation method: xfmNon - none, xfmZsc - z-standardization, 
+                #     xfmRNP - range -1 to 1, xfmRZP - range 0 to 1, xfmMag - max. magnitude of 1, xfmAvr - mean of 1, xfmStd - std. dev. of 1
+                xfmRwM = self$options$get("xfmMth")
+                # xfmRwD indicates whether the transformation 
+                xfmRwD = (substr(self$options$get("btwDir"), 4, 6) == substr(self$options$get("xfmDir"), 4, 6))
+                # mthNme is composed of variable type ([1:3]: int, cnt, bin) and method ([4:6], e.g., Euc → Euclidian)
                 # mthExp is only required for Minkowski and Custom within integer dissimilarities
-                resMtx = algPxm(dtaMtx, mthNme, mthExp)
+                # xfmRes is a vector of booleans, indicating which transformation should be applied after calculating the proximity measures
+                xfmRes = c(self$options$get("xfmAbs"), self$options$get("xfmInv"), self$options$get("xfmRsc"))
+                resMtx = algPxm(dtaMtx, xfmRwM, xfmRwD, mthNme, mthExp, xfmRes)
 
-                # The Transform Measures group allows you to transform the values generated by the distance measure. They are applied after
-                # the distance measure has been computed. Available options are absolute values, change sign, and rescale to 0–1 range.
-                blnXfR = c(self$options$get("xfmAbs"), self$options$get("xfmInv"), self$options$get("xfmRsc"))
-                if (any(blnXfR))
-                    resMtx = xfmRes(resMtx, blnXfR)
+                # prepare notes for the table footer (about included participants and used method) and assign results
+                mthNte = paste0(gsub("clcSim", "Similarities ", gsub("clcDis", "Dissimilarities ", self$options$get("disSim"))), " between ", 
+                                gsub("btwSbj", "cases",         gsub("btwVar", "variables",        self$options$get("btwDir"))), "; Method: ", mthDsc)
+                incNte = paste0("Total number of cases: ", sprintf("%d", numSbj), "; excluded because of invalid data (NA): ", sprintf("%d", numIvN), 
+                                ifelse(lvlNme == "bin", paste0(" and of invalid categories: ", sprintf("%d", numIvB)), ""), "; Included cases: ",    sprintf("%d", numSbj - numIvN - numIvB))
 
-                # assign results
-                if      (btwVar) {
+                if      (self$options$get("btwDir") == "btwVar") {
+                    # WARNING: if there is a too high number of participants or variables
+#                   if length(pxmVar) > 50 {
+#                       # get an Preformatted 
+#                       stop("your error message here")
+#                   }
+
                     # initialize the results table (add the required number of columns)
                     for (i in seq_along(pxmVar)) {
                         mtxVar$addColumn(name=pxmVar[[i]], title=pxmVar[[i]], type="number", format="zto")
@@ -89,46 +100,43 @@ proximityClass <- if (requireNamespace("jmvcore")) R6::R6Class(
 
                     # populate results
                     for (i in seq_along(pxmVar)) {
-                        values <- list()
-                        for (j in seq_along(pxmVar)) {
-#                           values[[pxmVar[[j]]]]  = ifelse(i > j, resMtx[i, j], ifelse(i < j, "", "\u2014"))
-                            values[[pxmVar[[j]]]]  = resMtx[i, j]
+                        values <- vector("list", length(pxmVar))
+                        names(values) = pxmVar
+                        values[] = ""
+                        for (j in seq_len(i)) {
+#                       for (j in seq_along(pxmVar)) {
+#                           values[[pxmVar[[j]]]] = ifelse(i > j, resMtx[i, j], ifelse(i < j, "", "\u2014"))
+#                           values[[pxmVar[[j]]]] = ifelse(i >= j, resMtx[i, j], "")
+                            values[[pxmVar[[j]]]] = resMtx[i, j]
                         }
                         mtxVar$setRow(rowNo=i, values)
                     }
-
-                    # initialize the results table (assign the notes underneath)
-                    mtxVar$setNote("pxmInf", gsub("_BA_", sprintf('%d', binAbs), gsub("_BP_", sprintf('%d', binPrs), gsub("_IP_", sprintf('%d', mthExp[1]), gsub("_IR_", sprintf('%d', mthExp[2]),
-                                                  paste0(ifelse(clcSim, "Similarities ", ifelse(clcDis, "Dissimilarities ", "ERROR")), " between variables; Method: ", nmePxm(mthNme), " (SPSS: ", spsPxm(mthNme), ")"))))))
-                    mtxVar$setNote("numSbj", paste0("Total number of cases: ", sprintf("%d", numSbj), "; excluded because of invalid data (NA): ", sprintf("%d", numIvN), ifelse(lvlBin, paste0(" and of invalid categories: ", sprintf("%d", numIvB)), ""),
-                                                    "; Included cases: ",    sprintf("%d", numSbj - numIvN - numIvB)))
-                    # make the table visible
+                    # add notes and make the table visible 
+                    mtxVar$setNote("mthNte", mthNte)
+                    mtxVar$setNote("incNte", incNte)
                     mtxVar$setVisible(TRUE)
                 }
-                else if (btwSbj) {
-                    # initialize the results table (add the required number of columns)
-                    for (i in seq_along(sbjLbl)) {
-                        mtxSbj$addColumn(name=sbjLbl[[i]], title=sbjLbl[[i]], type="number", format="zto")
-                    }
+                else if (self$options$get("btwDir") == "btwSbj") {
+                    # initialize the results table (add the required number of rows and columns)
+                    for (i in seq_along(sbjLbl)) { mtxSbj$addColumn(name=sbjLbl[[i]], title=sbjLbl[[i]], type="number", format="zto") }
+                    for (i in seq_along(sbjLbl)) { mtxSbj$addRow(rowKey=sbjLbl[[i]], list('.name' = sbjLbl[[i]])) }
 
                     # populate results
                     for (i in seq_along(sbjLbl)) {
-                        values <- list()
-                        values[[".name"]] = sbjLbl[[i]]
-                        for (j in seq_along(sbjLbl)) {
-#                           values[[sbjLbl[[j]]]] = ifelse(i > j, resMtx[i, j], ifelse(i < j, "", "\u2014"))
+                        values <- vector("list", length(sbjLbl))
+                        names(values) = sbjLbl
+                        values[] = ""
+                        for (j in seq_len(i)) {
+#                       for (j in seq_along(sbjLbl)) {
+#                           values[[sbjLbl[[j]]]] = ifelse(i > j,  resMtx[i, j], ifelse(i < j, "", "\u2014"))
+#                           values[[sbjLbl[[j]]]] = ifelse(i >= j, resMtx[i, j], "")
                             values[[sbjLbl[[j]]]] = resMtx[i, j]
                         }
-
-                        mtxSbj$addRow(rowKey=sbjLbl[[i]], values)
+                        mtxVar$setRow(rowNo=i, values)
                     }
-
-                    # initialize the results table (assign the notes underneath)
-                    mtxSbj$setNote("pxmInf", gsub("_BA_", sprintf('%d', binAbs), gsub("_BP_", sprintf('%d', binPrs), gsub("_IP_", sprintf('%d', mthExp[1]), gsub("_IR_", sprintf('%d', mthExp[2]),
-                                                  paste0(ifelse(clcSim, "Similarities ", ifelse(clcDis, "Dissimilarities ", "ERROR")), " between cases; Method: ", nmePxm(mthNme), " (SPSS: ", spsPxm(mthNme), ")"))))))
-                    mtxSbj$setNote("numSbj", paste0("Total number of cases: ", sprintf("%d", numSbj), "; excluded because of invalid data (NA): ", sprintf("%d", numIvN), ifelse(lvlBin, paste0(" and of invalid categories: ", sprintf("%d", numIvB)), ""),
-                                                    "; Included cases: ",    sprintf("%d", numSbj - numIvN - numIvB)))
-                    # make the table visible
+                    # add notes and make the table visible 
+                    mtxSbj$setNote("mthNte", mthNte)
+                    mtxSbj$setNote("incNte", incNte)
                     mtxSbj$setVisible(TRUE)
                 }
             }
@@ -137,9 +145,36 @@ proximityClass <- if (requireNamespace("jmvcore")) R6::R6Class(
 )
 
 # =====================================================================================================================
-# Algorithms to calculate proximities
+# Algorithms to calculate proximities (incl. transformations before and after this calculation)
 # =====================================================================================================================
-algPxm <- function(dtaMtx, mthNme, mthExp) {
+algPxm <- function(dtaMtx, xfmRwM, xfmRwD, mthNme, mthExp, xfmRes) {
+    # =================================================================================================================
+    # transforming data before calculating the proximity measures
+    # =================================================================================================================
+    # standardize data values for either cases or variables before computing proximities (NB: not applicable to binary data)
+    # standardization methods are z scores, range –1 to 1, range 0 to 1, max. magnitude of 1, mean of 1, and std. dev. of 1
+    if (mthNme[1:3] != 'bin' && xfmRwM != 'xfmNon') {
+        xfmDim = ifelse(xfmRwD, 1, 2)
+        # z-scores - Z - correct
+        if      (xfmRwM == "xfmZsc")
+            dtaMtx = sweep(sweep(dtaMtx, xfmDim, as.vector(apply(dtaMtx, xfmDim, mean)),  "-"), xfmDim, as.vector(apply(dtaMtx, xfmDim, sd)),          "/")
+        # range -1 to 1 - RANGE - over subjects correct, over variables possibly wrong in SPSS
+        else if (xfmRwM == "xfmRNP")
+            dtaMtx = sweep(dtaMtx, xfmDim, as.vector(diff(apply(dtaMtx, xfmDim, range))), "/")
+        # range 0 to 1 - RESCALE - over subjects correct, over variables possibly wrong in SPSS
+        else if (xfmRwM == "xfmRZP")
+            dtaMtx = sweep(sweep(dtaMtx, xfmDim, as.vector(apply(dtaMtx, xfmDim, min)),   "-"), xfmDim, as.vector(diff(apply(dtaMtx, xfmDim, range))), "/")
+        # maximum magnitude of 1 - MAX - correct
+        else if (xfmRwM == "xfmMag")
+            dtaMtx = sweep(dtaMtx, xfmDim, as.vector(apply(dtaMtx, xfmDim, max)),  "/")
+        # mean of 1 - MEAN - correct
+        else if (xfmRwM == "xfmAvr")
+            dtaMtx = sweep(dtaMtx, xfmDim, as.vector(apply(dtaMtx, xfmDim, mean)), "/")
+        # standard deviation of 1 - SD - correct
+        else if (xfmRwM == "xfmStd")
+            dtaMtx = sweep(dtaMtx, xfmDim, as.vector(apply(dtaMtx, xfmDim, sd)),   "/")
+    }
+
     # =================================================================================================================
     # integer measures that implemented using R functions (cor, dist)
     # =================================================================================================================
@@ -184,7 +219,10 @@ algPxm <- function(dtaMtx, mthNme, mthExp) {
                 # =====================================================================================================
                 if (mthNme == "binAnD" || mthNme == "binDsp" || mthNme == "binKc2" || mthNme == "binLmb" || mthNme == "binOch" || mthNme == "binPh4" || mthNme == "binPtD" || 
                     mthNme == "binSk4" || mthNme == "binSk5" || mthNme == "binSzD" || mthNme == "binVar" || mthNme == "binYlQ" || mthNme == "binYlY") {
-                    mtcVec = c(as.vector(table(dtaMtx[, i] == 1 & dtaMtx[, j] == 1)["TRUE"]), as.vector(table(dtaMtx[, i] == 1 & dtaMtx[, j] != 1)["TRUE"]), as.vector(table(dtaMtx[, i] != 1 & dtaMtx[, j] == 1)["TRUE"]), as.vector(table(dtaMtx[, i] != 1 & dtaMtx[, j] != 1)["TRUE"]))
+                    mtcVec = c(as.vector(table(dtaMtx[, i] == 1 & dtaMtx[, j] == 1)["TRUE"]), 
+                               as.vector(table(dtaMtx[, i] == 1 & dtaMtx[, j] != 1)["TRUE"]),
+                               as.vector(table(dtaMtx[, i] != 1 & dtaMtx[, j] == 1)["TRUE"]),
+                               as.vector(table(dtaMtx[, i] != 1 & dtaMtx[, j] != 1)["TRUE"]))
                     if (mthNme == "binAnD" || mthNme == "binLmb") {
                         t1 = max(mtcVec[1], mtcVec[2], na.rm=T) + max(mtcVec[3], mtcVec[4], na.rm=T) + max(mtcVec[1], mtcVec[3], na.rm=T) + max(mtcVec[2], mtcVec[4], na.rm=T)
                         t2 = max(sum(mtcVec[1], mtcVec[3], na.rm=T), sum(mtcVec[2], mtcVec[4], na.rm=T), na.rm=T) + max(sum(mtcVec[1], mtcVec[2], na.rm=T), sum(mtcVec[3], mtcVec[4], na.rm=T), na.rm=T)
@@ -354,55 +392,24 @@ algPxm <- function(dtaMtx, mthNme, mthExp) {
     # =================================================================================================================
 
     # =================================================================================================================
+    # transform the values generated by the distance measure, applied after the distance measure has been computed
+    # available options are [1] absolute values, [2] change sign, and [3] rescale to 0–1 range.
+    # =================================================================================================================
+    if (xfmRes[1])
+        resMtx = abs(resMtx)
+    if (xfmRes[2])
+        resMtx[row(resMtx) != col(resMtx)] = -resMtx[row(resMtx) != col(resMtx)]
+    if (xfmRes[3])
+        resMtx[row(resMtx) != col(resMtx)] = (resMtx[row(resMtx) != col(resMtx)] - min(resMtx[row(resMtx) != col(resMtx)])) / diff(range(resMtx[row(resMtx) != col(resMtx)]))
+
+    # =================================================================================================================
     # return matrix with results
     # =================================================================================================================
     return(resMtx)
 }
 
 # =====================================================================================================================
-# Transforming data before calculating the proximity measures
-# =====================================================================================================================
-xfmDta <- function(dtaMtx, xfmMth, xfmDir) {
-    xfmDim = ifelse(xfmDir == "xfmVar", 2, ifelse(xfmDir == "xfmSbj", 1, NA))
-
-    # z-scores - Z - correct
-    if      (xfmMth == "xfmZsc")
-        xfmMtx = sweep(sweep(dtaMtx, xfmDim, as.vector(apply(dtaMtx, xfmDim, mean)),  "-"), xfmDim, as.vector(apply(dtaMtx, xfmDim, sd)),          "/")
-    # range -1 to 1 - RANGE - over subjects correct, over variables possibly wrong in SPSS
-    else if (xfmMth == "xfmRNP")
-        xfmMtx = sweep(dtaMtx, xfmDim, as.vector(diff(apply(dtaMtx, xfmDim, range))), "/")
-    # range 0 to 1 - RESCALE - over subjects correct, over variables possibly wrong in SPSS
-    else if (xfmMth == "xfmRZP")
-        xfmMtx = sweep(sweep(dtaMtx, xfmDim, as.vector(apply(dtaMtx, xfmDim, min)),   "-"), xfmDim, as.vector(diff(apply(dtaMtx, xfmDim, range))), "/")
-    # maximum magnitude of 1 - MAX - correct
-    else if (xfmMth == "xfmMag")
-        xfmMtx = sweep(dtaMtx, xfmDim, as.vector(apply(dtaMtx, xfmDim, max)),  "/")
-    # mean of 1 - MEAN - correct
-    else if (xfmMth == "xfmAvr")
-        xfmMtx = sweep(dtaMtx, xfmDim, as.vector(apply(dtaMtx, xfmDim, mean)), "/")
-    # standard deviation of 1 - SD - correct
-    else if (xfmMth == "xfmStd")
-        xfmMtx = sweep(dtaMtx, xfmDim, as.vector(apply(dtaMtx, xfmDim, sd)),   "/")
-
-    return(xfmMtx)
-}
-
-# =====================================================================================================================
-# Transforming the result mastix after calculating the proximity measures
-# =====================================================================================================================
-xfmRes <- function(resMtx, blnXfR) {
-    if (blnXfR[1])
-        resMtx = abs(resMtx)
-    if (blnXfR[2])
-        resMtx[row(resMtx) != col(resMtx)] = -resMtx[row(resMtx) != col(resMtx)]
-    if (blnXfR[3])
-        resMtx[row(resMtx) != col(resMtx)] = (resMtx[row(resMtx) != col(resMtx)] - min(resMtx[row(resMtx) != col(resMtx)])) / diff(range(resMtx[row(resMtx) != col(resMtx)]))
-
-    return(resMtx)
-}
-
-# =====================================================================================================================
-# Transforming data before calculating the proximity measures
+# Description of the proximity measure
 # =====================================================================================================================
 nmePxm <- function(mthNme) {
     # measures for interval data
@@ -490,6 +497,9 @@ nmePxm <- function(mthNme) {
     return(resNme)
 }
 
+# =====================================================================================================================
+# Information regarding the equivalent SPSS proximity measure
+# =====================================================================================================================
 spsPxm <- function(mthNme) {
     # measures for interval data
     if      (mthNme == "intBlk")
